@@ -6,7 +6,7 @@ description: >
 sitemap: false
 hide_last_modified: false
 categories:
-  - example1
+  - favorite
 ---
 
 # 마크다운 기초 설명
