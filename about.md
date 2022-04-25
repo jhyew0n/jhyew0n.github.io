@@ -4,8 +4,6 @@ image: /assets/img/blog/hydejack-9.jpg
 description: >
   궁금한 것도, 생각하는 것도 많은 Heyvorite Blog
 hide_description: true
-redirect_from:
-  - /download/
 ---
 
 # About
