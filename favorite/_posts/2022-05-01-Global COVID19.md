@@ -1150,7 +1150,7 @@ plt.show()
 
 
     
-![png](output_44_0.png)
+![png](assets/img/post/Global COVID19/output_44_0.png)
     
 
 
@@ -1884,7 +1884,7 @@ plt.show()
 
 
     
-![png](output_59_0.png)
+![png](assets/img/post/Global COVID19/output_59_0.png)
     
 
 
@@ -2048,7 +2048,7 @@ plt.show()
 
 
     
-![png](output_68_0.png)
+![png](assets/img/post/Global COVID19/output_68_0.png)
     
 
 
@@ -2605,7 +2605,7 @@ plt.show()
 
 
     
-![png](output_84_0.png)
+![png](assets/img/post/Global COVID19/output_84_0.png)
     
 
 
@@ -2632,7 +2632,7 @@ plt.show()
 
 
     
-![png](output_87_0.png)
+![png](assets/img/post/Global COVID19/output_87_0.png)
     
 
 
