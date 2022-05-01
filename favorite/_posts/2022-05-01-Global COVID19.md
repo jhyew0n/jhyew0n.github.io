@@ -10,11 +10,12 @@ categories:
   - favorite
 ---
 
+# 코로나 확진자 패턴 분석
 
 * toc
 {:toc .large-only}
 
-## 코로나 확진자 패턴 분석
+
 
 ### 1. 사용 데이터 확인
 
