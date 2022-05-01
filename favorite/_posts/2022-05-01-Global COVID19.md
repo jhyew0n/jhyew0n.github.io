@@ -1,8 +1,24 @@
+---
+layout: post
+title: 코로나19 데이터 분석 연습
+description: >
+    코로나19 확진자/사망자 데이터, 백신 데이터를 이용한 데이터 분석 스터디 연습 과제
+sitemap: false
+hide_last_modified: false
+hide_description: true
+categories:
+  - favorite
+---
+
+
+* toc
+{:toc .large-only}
+
 ## 코로나 확진자 패턴 분석
 
 ### 1. 사용 데이터 확인
 
-https://covid19.who.int/data
+[데이터 출처](https://covid19.who.int/data)
 
 
 ```python
