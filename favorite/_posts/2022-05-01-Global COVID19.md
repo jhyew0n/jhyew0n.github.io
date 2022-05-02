@@ -222,6 +222,9 @@ vac_meta
     .dataframe thead th {
         text-align: right;
     }
+    .th {
+      font-size : 12px;
+    }
 </style>
 
   <table border="1" class="dataframe">
