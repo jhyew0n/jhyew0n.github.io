@@ -217,14 +217,14 @@ vac_meta
 
     .dataframe tbody tr th {
         vertical-align: top;
+        font-size : 12px;
     }
 
     .dataframe thead th {
         text-align: right;
+        font-size : 12px;
     }
-    .th {
-      font-size : 12px;
-    }
+ 
 </style>
 
   <table border="1" class="dataframe">
