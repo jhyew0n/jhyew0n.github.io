@@ -213,6 +213,7 @@ vac_meta
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
+        font-size : 12px;
     }
 
     .dataframe tbody tr th {
