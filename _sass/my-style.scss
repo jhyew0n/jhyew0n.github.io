@@ -73,11 +73,9 @@
   text-decoration-color: rgba(79,177,186,0.5);    // rgba(79,177,186,0.5)
 }
 
-/// table 폰트 사이즈 줄이고 싶다
 .table {
-  font-size: 12px;
+  font-size : 12px !important;
 }
-
 
 
 .markdown-body {

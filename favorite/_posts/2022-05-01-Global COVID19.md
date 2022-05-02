@@ -789,8 +789,6 @@ covid
 ```
 
 
-
-
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -804,6 +802,9 @@ covid
     .dataframe thead th {
         text-align: right;
     }
+
+}
+
 </style>
 <table border="1" class="dataframe">
   <thead>
