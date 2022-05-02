@@ -206,8 +206,8 @@ vac_meta.info()
 vac_meta
 ```
 
-
-
+<details>
+<summary>결과 보기 </summary>
 
 <div>
 <style scoped>
@@ -222,11 +222,8 @@ vac_meta
     .dataframe thead th {
         text-align: right;
     }
+</style>
 
-<details>
-<summary>결과 보기 </summary>
-
-  </style>
   <table border="1" class="dataframe">
     <thead>
       <tr style="text-align: right;">
@@ -378,8 +375,6 @@ vac_meta
     </tbody>
   </table>
   <p>887 rows × 9 columns</p>
-  </div>
-
 </div>
 </details>
 
@@ -954,7 +949,7 @@ covid
 </table>
 <p>198843 rows × 8 columns</p>
 </div>
-{:.scroll-table}
+
 
 
 ```python
