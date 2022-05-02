@@ -129,7 +129,7 @@ covid_sum.info()
 |NUMBER_VACCINES_TYPES_USED|	Integer|	Number of vaccine types used per country, territory, area|
 |PERSONS_BOOSTER_ADD_DOSE	|Integer|	Persons received booster or additional dose|
 |PERSONS_BOOSTER_ADD_DOSE_PER100	|Decimal|	Persons received booster or additional dose per 100 population|
-
+{:.smaller}
 
 ```python
 vac = pd.read_csv('vaccination-data.csv')
@@ -175,7 +175,7 @@ vac.info()
 |END_DATE	|Date|	End date of vaccine rollout|
 |COMMENT	|String|	Comments related to vaccine rollout|
 |DATA_SOURCE	|String|	Indicates data source - REPORTING: Data reported by Member States, or sourced from official reports - OWID: Data sourced from Our World in Data: https://ourworldindata.org/covid-vaccinations|
-
+{:.smaller}
 
 
 ```python
@@ -375,7 +375,7 @@ vac_meta
 </table>
 <p>887 rows × 9 columns</p>
 </div>
-
+{:.scroll-table}
 
 
 ### 5) 국가별 인구, 면적 데이터
@@ -394,7 +394,7 @@ https://www.worldometers.info/world-population/population-by-country/
 |Med Age|Decimal|
 |Urban Pop|Integer|Urban population|
 |World Share|Decimal|
-
+{:.smaller}
 
 ```python
 pop = pd.read_csv('World Country Population.csv')
@@ -946,8 +946,7 @@ covid
 </table>
 <p>198843 rows × 8 columns</p>
 </div>
-
-
+{:.scroll-table}
 
 
 ```python
@@ -1131,7 +1130,7 @@ covid[['Date_reported','Country','New_cases','Cumulative_cases', 'New_deaths','C
 </table>
 <p>198843 rows × 6 columns</p>
 </div>
-
+{:.scroll-table}
 
 
 ### 확진자/사망자 발생 추이
@@ -1262,7 +1261,7 @@ covid[covid['Date_reported']=="2022-04-20"].sort_values('New_cases', ascending=F
   </tbody>
 </table>
 </div>
-
+{:.smaller}
 
 
 ### 주간 확진자수
@@ -1429,7 +1428,7 @@ Weekdata
 </table>
 <p>29151 rows × 7 columns</p>
 </div>
-
+{:.smaller}
 
 
 ### 월간 확진자수
@@ -1596,7 +1595,7 @@ Monthdata
 </table>
 <p>6636 rows × 7 columns</p>
 </div>
-
+{:.smaller}
 
 
 ### 국가별 최대 유행기
@@ -1705,7 +1704,7 @@ max_cases
 </table>
 <p>237 rows × 3 columns</p>
 </div>
-
+{:.smaller}
 
 
 
@@ -1884,7 +1883,7 @@ max_count
   </tbody>
 </table>
 </div>
-
+{:.smaller}
 
 
 
@@ -2049,7 +2048,7 @@ dayend
 </table>
 <p>213 rows × 3 columns</p>
 </div>
-
+{:.smaller}
 
 
 
@@ -2166,7 +2165,7 @@ covid_sum[['Name','Cases - cumulative total per 100000 population']]\
   </tbody>
 </table>
 </div>
-
+{:.smaller}
 
 
 
@@ -2360,7 +2359,7 @@ head5.sort_values(by=['Name','Cases - cumulative total per 100000 population'],a
   </tbody>
 </table>
 </div>
-
+{:.smaller}
 
 
 ### 확진자 수 대비 사망률
@@ -2455,7 +2454,7 @@ covid_sum[['Name','deaths/cases']].sort_values('deaths/cases',ascending=False).h
   </tbody>
 </table>
 </div>
-
+{:.smaller}
 
 
 
