@@ -17,7 +17,7 @@ categories:
 
 
 
-### 1. 사용 데이터 확인
+## 1. 사용 데이터 확인
 
 [데이터 출처](https://covid19.who.int/data)
 
@@ -1167,7 +1167,7 @@ plt.show()
 
 
     
-![graph](assets/img/post/GlobalCOVID19/output_44_0.png'
+![graph](/assets/img/post/GlobalCOVID19/output_44_0.png)
     
 
 
@@ -1901,7 +1901,7 @@ plt.show()
 
 
     
-![graph](assets/img/post/GlobalCOVID19/output_59_0.png'
+![graph](/assets/img/post/GlobalCOVID19/output_59_0.png)
     
 
 
@@ -2065,7 +2065,7 @@ plt.show()
 
 
     
-![graph](assets/img/post/GlobalCOVID19/output_68_0.png)
+![graph](/assets/img/post/GlobalCOVID19/output_68_0.png)
     
 
 
@@ -2622,7 +2622,7 @@ plt.show()
 
 
     
-![graph](assets/img/post/GlobalCOVID19/output_84_0.png)
+![graph](/assets/img/post/GlobalCOVID19/output_84_0.png)
     
 
 
@@ -2649,7 +2649,7 @@ plt.show()
 
 
     
-![graph](assets/img/post/GlobalCOVID19/output_87_0.png)
+![graph](/assets/img/post/GlobalCOVID19/output_87_0.png)
     
 
 
