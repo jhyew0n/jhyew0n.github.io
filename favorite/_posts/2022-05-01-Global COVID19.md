@@ -54,7 +54,7 @@ import pandas as pd
 |Cumulative_cases|Integer|Cumulative confirmed cases reported to WHO to date.|
 |New_deaths|Integer|New confirmed deaths. Calculated by subtracting previous cumulative deaths from current cumulative deaths.|
 |Cumulative_deaths|Integer|Cumulative confirmed deaths reported to WHO to date.|
-
+{:.smaller}
 
 ```python
 covid = pd.read_csv('WHO-COVID-19-global-data.csv')
@@ -222,160 +222,168 @@ vac_meta
     .dataframe thead th {
         text-align: right;
     }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>ISO3</th>
-      <th>VACCINE_NAME</th>
-      <th>PRODUCT_NAME</th>
-      <th>COMPANY_NAME</th>
-      <th>AUTHORIZATION_DATE</th>
-      <th>START_DATE</th>
-      <th>END_DATE</th>
-      <th>COMMENT</th>
-      <th>DATA_SOURCE</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>JEY</td>
-      <td>Moderna - mRNA-1273</td>
-      <td>mRNA-1273</td>
-      <td>Moderna</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>OWID</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>JEY</td>
-      <td>AstraZeneca - AZD1222</td>
-      <td>AZD1222</td>
-      <td>AstraZeneca</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>OWID</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>JEY</td>
-      <td>Pfizer BioNTech - Comirnaty</td>
-      <td>Comirnaty</td>
-      <td>Pfizer BioNTech</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>OWID</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>GGY</td>
-      <td>Moderna - mRNA-1273</td>
-      <td>mRNA-1273</td>
-      <td>Moderna</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>OWID</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>GGY</td>
-      <td>AstraZeneca - AZD1222</td>
-      <td>AZD1222</td>
-      <td>AstraZeneca</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>OWID</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>882</th>
-      <td>SYR</td>
-      <td>Gamaleya - Sputnik-Light</td>
-      <td>Sputnik-Light</td>
-      <td>Gamaleya Research Institute</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>REPORTING</td>
-    </tr>
-    <tr>
-      <th>883</th>
-      <td>PHL</td>
-      <td>Julphar - Hayat-Vax</td>
-      <td>Hayat-Vax</td>
-      <td>NaN</td>
-      <td>2021-08-11</td>
-      <td>2021-08-25</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>REPORTING</td>
-    </tr>
-    <tr>
-      <th>884</th>
-      <td>SYC</td>
-      <td>Julphar - Hayat-Vax</td>
-      <td>Hayat-Vax</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>REPORTING</td>
-    </tr>
-    <tr>
-      <th>885</th>
-      <td>PRY</td>
-      <td>Julphar - Hayat-Vax</td>
-      <td>Hayat-Vax</td>
-      <td>NaN</td>
-      <td>2020-12-30</td>
-      <td>2021-05-24</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>REPORTING</td>
-    </tr>
-    <tr>
-      <th>886</th>
-      <td>IRN</td>
-      <td>Shifa - COVIran Barakat</td>
-      <td>COVIran Barakat</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>REPORTING</td>
-    </tr>
-  </tbody>
-</table>
-<p>887 rows × 9 columns</p>
+
+<details>
+<summary>결과 보기 </summary>
+
+  </style>
+  <table border="1" class="dataframe">
+    <thead>
+      <tr style="text-align: right;">
+        <th></th>
+        <th>ISO3</th>
+        <th>VACCINE_NAME</th>
+        <th>PRODUCT_NAME</th>
+        <th>COMPANY_NAME</th>
+        <th>AUTHORIZATION_DATE</th>
+        <th>START_DATE</th>
+        <th>END_DATE</th>
+        <th>COMMENT</th>
+        <th>DATA_SOURCE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>0</th>
+        <td>JEY</td>
+        <td>Moderna - mRNA-1273</td>
+        <td>mRNA-1273</td>
+        <td>Moderna</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>OWID</td>
+      </tr>
+      <tr>
+        <th>1</th>
+        <td>JEY</td>
+        <td>AstraZeneca - AZD1222</td>
+        <td>AZD1222</td>
+        <td>AstraZeneca</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>OWID</td>
+      </tr>
+      <tr>
+        <th>2</th>
+        <td>JEY</td>
+        <td>Pfizer BioNTech - Comirnaty</td>
+        <td>Comirnaty</td>
+        <td>Pfizer BioNTech</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>OWID</td>
+      </tr>
+      <tr>
+        <th>3</th>
+        <td>GGY</td>
+        <td>Moderna - mRNA-1273</td>
+        <td>mRNA-1273</td>
+        <td>Moderna</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>OWID</td>
+      </tr>
+      <tr>
+        <th>4</th>
+        <td>GGY</td>
+        <td>AstraZeneca - AZD1222</td>
+        <td>AZD1222</td>
+        <td>AstraZeneca</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>OWID</td>
+      </tr>
+      <tr>
+        <th>...</th>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+      </tr>
+      <tr>
+        <th>882</th>
+        <td>SYR</td>
+        <td>Gamaleya - Sputnik-Light</td>
+        <td>Sputnik-Light</td>
+        <td>Gamaleya Research Institute</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>REPORTING</td>
+      </tr>
+      <tr>
+        <th>883</th>
+        <td>PHL</td>
+        <td>Julphar - Hayat-Vax</td>
+        <td>Hayat-Vax</td>
+        <td>NaN</td>
+        <td>2021-08-11</td>
+        <td>2021-08-25</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>REPORTING</td>
+      </tr>
+      <tr>
+        <th>884</th>
+        <td>SYC</td>
+        <td>Julphar - Hayat-Vax</td>
+        <td>Hayat-Vax</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>REPORTING</td>
+      </tr>
+      <tr>
+        <th>885</th>
+        <td>PRY</td>
+        <td>Julphar - Hayat-Vax</td>
+        <td>Hayat-Vax</td>
+        <td>NaN</td>
+        <td>2020-12-30</td>
+        <td>2021-05-24</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>REPORTING</td>
+      </tr>
+      <tr>
+        <th>886</th>
+        <td>IRN</td>
+        <td>Shifa - COVIran Barakat</td>
+        <td>COVIran Barakat</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>NaN</td>
+        <td>REPORTING</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>887 rows × 9 columns</p>
+  </div>
+
 </div>
-{:.scroll-table}
+</details>
+
+
 
 
 ### 5) 국가별 인구, 면적 데이터
