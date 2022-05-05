@@ -209,6 +209,7 @@ vac_meta
 <details>
 <summary> 결과 보기 </summary>
 
+
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -501,17 +502,16 @@ covid['Country'].unique()
     'United Republic of Tanzania''United States of America', 'United States Virgin Islands',
     'Uruguay', 'Uzbekistan', 'Vanuatu','Venezuela (Bolivarian Republic of)', 'Viet Nam', 
     'Wallis and Futuna', 'Yemen', 'Zambia', 'Zimbabwe'], dtype=object)
-
 </div>
 </details>
 
-
+<br>
+<br>
 
 
 ```python
 sorted(pop['Country'])
 ```
-
 <details>
 <summary> 결과 보기 </summary>
  <div markdown="1">
@@ -755,6 +755,9 @@ sorted(pop['Country'])
 
 </div>
 </details>
+
+<br>
+<br>
 
 
 ```python
