@@ -116,7 +116,6 @@ FROM train
 DESC train
 ```
 
-> 결과
 
 |      **Field**      | **Type** | **Null** | **Default** |
 |:-------------------:|:--------:|:--------:|:-----------:|
@@ -151,8 +150,6 @@ DESC train
 SELECT count(*)
 FROM train
 ```
-
-> 결과
 
 | count(*) |
 |:--------:|
@@ -189,8 +186,6 @@ FROM train
 GROUP BY Education;
 ```
 
-> 결과
-
 |  Education | count(id) | RAT     |
 |:----------:|-----------|---------|
 | Master     | 173       | 15.6137 |
@@ -212,7 +207,6 @@ Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no ration
 Absurd가 뭔지 한참 찾았다...
 
 
-> 결과
 
 | Education | count(id) | RAT     |
 |:---------:|-----------|---------|
@@ -270,26 +264,56 @@ Kidhome, Teenhome은 수치형 변수로 보는게 맞을 것 같은데 값의 �
 
 
 ```sql
-SELECT DISTINCT Kidhome
-FROM train;
+SELECT Kidhome, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
+FROM train
+GROUP BY Kidhome;
 ```
+
 > 0, 1, 2
 
+| Kidhome | count(id) |   RAT   | sum(target) |
+|:-------:|:---------:|:-------:|:-----------:|
+|    0    |       661 | 59.6570 |      590377 |
+|    1    |       418 | 37.7256 |       89295 |
+|    2    |        29 |  2.6173 |        4099 |
+{:.smaller}
 
 ```sql
-SELECT DISTINCT Teenhome
-FROM train;
+SELECT Teenhome, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
+FROM train
+GROUP BY Kidhome;
 ```
 > 0, 1, 2
+
+| Teenhome | count(id) |   RAT   | sum(target) |
+|:--------:|:---------:|:-------:|:-----------:|
+|     0    |       571 | 51.5343 |      393832 |
+|     1    |       507 | 45.7581 |      270224 |
+|     2    |        30 |  2.7076 |       19715 |
+{:.smaller}
+
+
+*참고로 Kid는 성인 이전의 아이들을 포괄적으로 의미하고 Teen은 그 중 청소년기의 아이들만 지칭하는 것 같은데
+왜 Kidhome 1,2 < Teenhome 1,2 일까...?*
+
+
+
 
 나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
                       'Complain', 'Response
 
 
 
+```sql
+SELECT sum(AcceptedCmp1), sum(AcceptedCmp2), sum(AcceptedCmp3), sum(AcceptedCmp4), sum(AcceptedCmp5), sum(Complain), sum(Response)
+FROM train;
+```
 
 
-
+| sum(AcceptedCmp1) | sum(AcceptedCmp2) | sum(AcceptedCmp3) | sum(AcceptedCmp4) | sum(AcceptedCmp5) | sum(Complain) | sum(Response) |
+|:-----------------:|:-----------------:|:-----------------:|-------------------|-------------------|---------------|---------------|
+|         76        |         17        |         77        |         95        |         80        |       10      |      157      |
+{:.smaller}
 
 
 
