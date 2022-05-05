@@ -1,31 +1,30 @@
 ---
 layout: post
-title: 소비자 데이터를 이용한 소비 예측
+title: 소비자 데이터를 이용한 소비 예측 with SQL
 description: >
   데이터 분석 스터디 실습, DACON
 sitemap: false
 hide_last_modified: true
+hide_description: true
 categories:
   - project
 ---
 
-# 소비자 데이터 기반 소비 예측
-
+# 소비자 데이터 기반 소비 예측 with SQL
 
 * toc
 {:toc .large-only}
 
 
+[ 👉 DACON : 소비자 데이터 기반 소비 예측 경진대회 바로가기](https://dacon.io/competitions/official/235893/overview/description)
 
-![ 👉 DACON : 소비자 데이터 기반 소비 예측 경진대회 바로가기](https://dacon.io/competitions/official/235893/overview/description)
 
+## 데이터 확인
 
-## 데이터 설명
-
-### train.csv : 학습 데이터
+### 1) DACON 제공 데이터 설명 확인
 
 |      col_names      | dtype   |                             description                            |
-|:-------------------:|---------|:------------------------------------------------------------------:|
+|:-------------------:|:---------:|:------------------------------------------------------------------|
 |          id         | int64   |                             샘플 아이디                            |
 |      Year_Birth     | **int64**   |                            고객 생년월일                           |
 |      Education      | object(범주형)  |                              고객 학력                             |
@@ -50,11 +49,14 @@ categories:
 |        target       | int64   |                        고객의 제품 총 소비량                       |
 {:.smaller}
 
-Python을 이용해 csv 파일을 Database에 올려줌
+### 2) Python을 이용해 csv 파일을 Database에 올려줌
 
 <details>
 <summary>python 코드 확인</summary>
+<div>
+
     ```python
+
     # 라이브러리 설치 (주피터 노트북)
     !pip install pandas
     !pip install sqlalchemy
@@ -83,9 +85,11 @@ Python을 이용해 csv 파일을 Database에 올려줌
     sql = "select * from 테이블이름 limit 5"
     pd.read_sql(sql,db)
     ```
+
+</div>
 </details>
 
-![코드 참고 블로그](https://velog.io/@actpjk/21.2.14-pandas-pymysql-sqlalchemy-csv%ED%8C%8C%EC%9D%BC%EC%9D%84-MySQL%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95)
+[코드 참고 블로그](https://velog.io/@actpjk/21.2.14-pandas-pymysql-sqlalchemy-csv%ED%8C%8C%EC%9D%BC%EC%9D%84-MySQL%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95)
 
 
 ```sql
@@ -106,13 +110,14 @@ FROM train
 {:.scroll-table}
 
 
-## 테이블 구조 확인
+## 3) 테이블 구조 확인
 
 ```sql
 DESC train
 ```
 
 > 결과
+
 |      **Field**      | **Type** | **Null** | **Default** |
 |:-------------------:|:--------:|:--------:|:-----------:|
 | id                  |  bigint  |    YES   |     NULL    |
@@ -139,5 +144,18 @@ DESC train
 | target              |  bigint  |    YES   |     NULL    |
 {:.smaller}
 {:.scroll-table}
+
+
+## 4) 데이터 크기 확인
+```sql
+SELECT count(*)
+FROM train
+```
+
+> 결과
+
+| count(*) |
+|:--------:|
+| 1108     |
 
 
