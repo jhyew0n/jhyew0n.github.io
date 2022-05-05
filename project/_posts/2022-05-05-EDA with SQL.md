@@ -226,17 +226,44 @@ Absurd가 뭔지 한참 찾았다...
 | Absurd    | 1         | 0.0903  |
 {:.smaller}
 
-Alone, YOLO, Absurd는 값이 너무 적어서 Single에 포함시킴.
+Alone, YOLO, Absurd는 값이 너무 적어서 Single에 포함시킨다.
 
 ```sql
 UPDATE train
-SET Marital_Status = Single
-WHERE Marital_Status = 
-
+SET Marital_Status = "Single"
+WHERE Marital_Status = "YOLO" 
+	or Marital_Status = "Absurd"
+	or Marital_Status = "Alone" ;
 ```
 
+UPDATE 구문으로 데이터를 바꾸고 다시 확인해봤다. 이번에는 소비량 합계도 함께 출력해봤다.
+UPDATA 구문처럼 원본 테이블을 수정하는 경우에는 
+
+> BEGIN tran
+> COMMIT tran
+
+혹시 모를 상황을 대비해 트랜잭션을 설정하고 commit하는게 좋은데,
+mysql은 기본적으로 자동 commit이 설정되어 있는 것 같다. 알아서 반영됐다.
 
 
+```sql
+SELECT Marital_Status, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
+FROM train
+GROUP BY Marital_Status;
+
+> 결과
+
+| Education | count(id) |   RAT   | sum(target) |
+|:---------:|:---------:|:-------:|:-----------:|
+| Together  |       296 | 26.7148 |      176101 |
+| Single    |       238 | 21.4801 |      148846 |
+| Married   |       415 | 37.4549 |      251653 |
+| Widow     |        39 |  3.5199 |       28150 |
+| Divorced  |       120 | 10.8303 |       79021 |
+{:.smaller}
+
+
+다음으로
 
 Kidhome, Teenhome은 수치형 변수로 보는게 맞을 것 같은데 값의 범위가 좁아서 카테고리형으로 분류한 것 같다.
 이거를 카테고리형으로 바꾸려면 3명 이상 이라는 옵션이 있어야 할 것 같은데, 없다.
