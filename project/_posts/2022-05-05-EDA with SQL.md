@@ -161,8 +161,75 @@ FROM train
 
 ## 2. 데이터 탐색
 
+**카테고리형 변수** : ['Education', 'Marital_Status', 'Kidhome', 'Teenhome'
+               'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
+               'Complain', 'Response']
+
+**수치형 변수** : ['Year_Birth', 'Income', 'Year', 'Month', 'Day', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
+       'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth']
+
+### 2-1) 카테고리형 변수 탐색
+
+```sql
+SELECT DISTINCT Education
+FROM train;
+```
+> 'Master', 'Graduation', 'Basic', 'PhD', '2n Cycle'
+
+찾아보니 
+Basic(중등 졸업), Graduation(학사), Master(석사), PhD(박사), 2n Cycle(?)
+
+2n Cycle은  뭔지 모르겠다. 
+
+<span style="color:green; font-size:110%">Education 데이터 분포</span>
+
+```sql
+SELECT Education, count(id), count(id) / sum(count(*)) OVER() AS RAT
+FROM train
+GROUP BY Education;
+```
+
+> 결과
+
+|  Education | count(id) | RAT     |
+|:----------:|-----------|---------|
+| Master     | 173       | 15.6137 |
+| Graduation | 570       | 51.4440 |
+| Basic      | 22        | 1.9856  |
+| PhD        | 254       | 22.9242 |
+| 2n Cycle   | 89        | 8.0325  |
+{:.smaller}
 
 
+```sql
+SELECT DISTINCT Marital_Status
+FROM train;
+```
+> 'Together', 'Single', 'Married', 'Widow', 'Divorced', 'Alone', 'YOLO', 'Absurd'
 
+Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no rational or orderly relationship to hyman life)
+
+Absurd가 뭔지 한참 찾았다...
+
+
+Kidhome, Teenhome은 수치형 변수로 보는게 맞을 것 같은데 값의 범위가 좁아서 카테고리형으로 분류한 것 같다.
+이거를 카테고리형으로 바꾸려면 3명 이상 이라는 옵션이 있어야 할 것 같은데, 없다.
+
+
+```sql
+SELECT DISTINCT Kidhome
+FROM train;
+```
+> 0, 1, 2
+
+
+```sql
+SELECT DISTINCT Teenhome
+FROM train;
+```
+> 0, 1, 2
+
+나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
+                      'Complain', 'Response
 
 

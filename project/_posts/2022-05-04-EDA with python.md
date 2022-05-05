@@ -159,7 +159,7 @@ train.head()
 
 
 
-<div style="width:100%; height:200px; overflow:auto">
+<div style="width:100%; overflow:auto">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
