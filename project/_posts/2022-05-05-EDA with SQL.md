@@ -53,7 +53,7 @@ categories:
 
 <details>
 <summary>python 코드 확인</summary>
-<div>
+<div markdown="1">
 
     ```python
 
@@ -89,17 +89,20 @@ categories:
 </div>
 </details>
 
+  
+    
 [코드 참고 블로그](https://velog.io/@actpjk/21.2.14-pandas-pymysql-sqlalchemy-csv%ED%8C%8C%EC%9D%BC%EC%9D%84-MySQL%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95)
 
+  
 
 ```sql
 SELECT *
 FROM train
 ```
+  
 
-> 결과
 
-| **id** | **Year_Birth** | **Education** | **Marital_Status** | **Income** | **Kidhome** | **Teenhome** | **Dt_Customer** | **Recency** | **NumDealsPurchases** | **NumWebPurchases** | **NumCatalogPurchases** | **NumStorePurchases** | **NumWebVisitsMonth** | **AcceptedCmp3** | **AcceptedCmp4** | **AcceptedCmp5** | **AcceptedCmp1** | **AcceptedCmp2** | **Complain** | **Response** | **target** | **target** |
+| **id** | **Year_Birth** | **Education** | **Marital_Status** | **Income** | **Kidhome** | **Teenhome** | **Dt_Customer** | **Recency** | **NumDealsPurchases** | **NumWebPurchases** | **NumCatalogPurchases** | **NumStorePurchases** | **NumWebVisitsMonth** | **AcceptedCmp3** | **AcceptedCmp4** | **AcceptedCmp5** | **AcceptedCmp1** | **AcceptedCmp2** | **Complain** | **Response** | **target** | |
 |-------:|---------------:|--------------:|-------------------:|-----------:|------------:|-------------:|----------------:|------------:|----------------------:|--------------------:|------------------------:|----------------------:|----------------------:|-----------------:|-----------------:|-----------------:|-----------------:|-----------------:|-------------:|-------------:|-----------:|-----------:|
 | 0      | 1974           | Master        | Together           | 46014      | 1           | 1            | 21-01-2013      | 21          | 10                    | 7                   | 1                       | 8                     | 7                     | 0                | 0                | 0                | 0                | 0                | 0            | 0            | 541        |            |
 | 1      | 1962           | Graduation    | Single             | 76624      | 0           | 1            | 24-05-2014      | 68          | 1                     | 5                   | 10                      | 7                     | 1                     | 1                | 0                | 0                | 0                | 0                | 0            | 0            | 899        |            |
@@ -146,6 +149,8 @@ DESC train
 
 
 ## 4) 데이터 크기 확인
+
+
 ```sql
 SELECT count(*)
 FROM train
@@ -158,11 +163,11 @@ FROM train
 
 ## 2. 데이터 탐색
 
-**카테고리형 변수** : ['Education', 'Marital_Status', 'Kidhome', 'Teenhome'
+- **카테고리형 변수** : ['Education', 'Marital_Status', 'Kidhome', 'Teenhome'
                'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
                'Complain', 'Response']
 
-**수치형 변수** : ['Year_Birth', 'Income', 'Year', 'Month', 'Day', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
+- **수치형 변수** : ['Year_Birth', 'Income', 'Year', 'Month', 'Day', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
        'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth']
 
 ### 2-1) 카테고리형 변수 탐색
@@ -202,7 +207,9 @@ FROM train;
 ```
 > 'Together', 'Single', 'Married', 'Widow', 'Divorced', 'Alone', 'YOLO', 'Absurd'
 
+
 Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no rational or orderly relationship to hyman life)
+
 
 Absurd가 뭔지 한참 찾았다...
 
@@ -220,7 +227,9 @@ Absurd가 뭔지 한참 찾았다...
 | Absurd    | 1         | 0.0903  |
 {:.smaller}
 
+
 Alone, YOLO, Absurd는 값이 너무 적어서 Single에 포함시킨다.
+
 
 ```sql
 UPDATE train
@@ -230,14 +239,18 @@ WHERE Marital_Status = "YOLO"
 	or Marital_Status = "Alone" ;
 ```
 
+
 UPDATE 구문으로 데이터를 바꾸고 다시 확인해봤다. 이번에는 소비량 합계도 함께 출력해봤다.
 UPDATA 구문처럼 원본 테이블을 수정하는 경우에는 
+
 
 > BEGIN tran
 > COMMIT tran
 
+
 혹시 모를 상황을 대비해 트랜잭션을 설정하고 commit하는게 좋은데,
 mysql은 기본적으로 자동 commit이 설정되어 있는 것 같다. 알아서 반영됐다.
+
 
 
 ```sql
@@ -245,7 +258,7 @@ SELECT Marital_Status, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, s
 FROM train
 GROUP BY Marital_Status;
 
-> 결과
+
 
 | Education | count(id) |   RAT   | sum(target) |
 |:---------:|:---------:|:-------:|:-----------:|
@@ -271,6 +284,7 @@ GROUP BY Kidhome;
 
 > 0, 1, 2
 
+
 | Kidhome | count(id) |   RAT   | sum(target) |
 |:-------:|:---------:|:-------:|:-----------:|
 |    0    |       661 | 59.6570 |      590377 |
@@ -278,12 +292,15 @@ GROUP BY Kidhome;
 |    2    |        29 |  2.6173 |        4099 |
 {:.smaller}
 
+
 ```sql
 SELECT Teenhome, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
 FROM train
 GROUP BY Kidhome;
 ```
+
 > 0, 1, 2
+
 
 | Teenhome | count(id) |   RAT   | sum(target) |
 |:--------:|:---------:|:-------:|:-----------:|

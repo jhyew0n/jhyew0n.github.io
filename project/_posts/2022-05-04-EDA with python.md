@@ -10,6 +10,7 @@ categories:
   - project
 ---
 
+
 ## 소비자 데이터를 이용한 소비 예측 with python
 
 * toc
@@ -905,7 +906,6 @@ df_temp28.style.background_gradient(cmap='viridis')
     </tr>
   </tbody>
 </table>
-{:.scoll-table}
 
 
 
