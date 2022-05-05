@@ -16,12 +16,6 @@ categories:
 {:toc .large-only}
 
 
-<style>
-table{float:left}
-</style>
-
-
-
 # 소비자 데이터 기반 소비 예측 경진대회 EDA
 
 ### 탐색적 데이터 분석(EDA, Exploratory Data Analysis)이란?
