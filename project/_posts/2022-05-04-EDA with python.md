@@ -466,7 +466,7 @@ train['Day'] = train['Dt_Customer'].apply(lambda x : x.split('-')[0]).astype('in
 train = train.drop('Dt_Customer', axis = 1)
 ```
 
-## 피쳐 타입 분리
+### 피쳐 타입 분리
 
 
 ```python
