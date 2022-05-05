@@ -10,7 +10,7 @@ categories:
   - project
 ---
 
-# 소비자 데이터를 이용한 소비 예측 with python
+## 소비자 데이터를 이용한 소비 예측 with python
 
 * toc
 {:toc .large-only}
@@ -80,12 +80,18 @@ table{float:left}
 |                  |                  |            |  다차원 척도법  |           |
 {:.smaller}
 
+
+
 [참고 링크](https://eda-ai-lab.tistory.com/13)
+
+
 
 
 ## 데이터 설명
 
 ### 1. train.csv : 학습 데이터
+
+
 
 |      col_names      | dtype   |                             description                            |
 |:-------------------:|---------|:------------------------------------------------------------------:|
@@ -111,17 +117,25 @@ table{float:left}
 |       Complain      | int64   |    고객이 지난 2년 동안 불만을 제기한 경우 1, 그렇지 않은 경우 0   |
 |       Response      | int64   |  고객이 마지막 캠페인에서 제안을 수락한 경우 1, 그렇지 않은 경우 0 |
 |        target       | int64   |                        고객의 제품 총 소비량                       |
+{:.smaller}
+
 
 
 ### 2. test.csv : 테스트 데이터
 위와 동일
 
-### 3. sample_submission.csv : 제출 양식
+
+
+### 3. sample_submission.csv : 제출 양식 데이터
 
 | col_names |      description      |
 |:---------:|:---------------------:|
 | id        | 샘플 아이디           |
 | target    | 고객의 제품 총 소비량 |
+{:.smaller}
+
+
+
 
 ## 1. 데이터 불러오기
 먼저 주어진 데이터를 불러오고 확인합니다.
@@ -145,6 +159,7 @@ pd.set_option('mode.chained_assignment',  None)
 ```
 
 
+
 ```python
 train = pd.read_csv('소비예측_train.csv')  # 다운받은 csv를 pandas의 DataFrame 형식으로 불러옵니다.
 train.head()
@@ -153,7 +168,7 @@ train.head()
 
 
 
-<div>
+<div style="width:100%; height:200px; overflow:auto">
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -167,7 +182,7 @@ train.head()
         text-align: right;
     }
 </style>
-<table border="1" class="dataframe">
+<table border="1" class="dataframe" width="100%" border="0" cellspacing="0" cellpadding="0">
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -491,42 +506,24 @@ for i in categorical :
 print(data)
 ```
 
-    {'Education': ['Master', 'Graduation', 'Basic', 'PhD', '2n Cycle'], 'Marital_Status': ['Together', 'Single', 'Married', 'Widow', 'Divorced', 'Alone', 'YOLO', 'Absurd'], 'Kidhome': [1, 0, 2], 'Teenhome': [1, 0, 2], 'AcceptedCmp3': [0, 1], 'AcceptedCmp4': [0, 1], 'AcceptedCmp5': [0, 1], 'AcceptedCmp1': [0, 1], 'AcceptedCmp2': [0, 1], 'Complain': [0, 1], 'Response': [0, 1]}
+    {'Education': ['Master', 'Graduation', 'Basic', 'PhD', '2n Cycle'], 
+    'Marital_Status': ['Together', 'Single', 'Married', 'Widow', 'Divorced', 'Alone', 'YOLO', 'Absurd'], 
+    'Kidhome': [1, 0, 2], 
+    'Teenhome': [1, 0, 2], 
+    'AcceptedCmp3': [0, 1], 
+    'AcceptedCmp4': [0, 1], 
+    'AcceptedCmp5': [0, 1], 
+    'AcceptedCmp1': [0, 1], 
+    'AcceptedCmp2': [0, 1], 
+    'Complain': [0, 1], 
+    'Response': [0, 1]}
 
 
 ***모르는 것 찾아보기***  
+
 - Education : Basic(중등 졸업), Graduation(학사), Master(석사), PhD(박사), 2n Cycle(?)  
 - Marital_Status : Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no rational or orderly relationship to hyman life)  
 
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
-
-
-```python
-
-```
 
 
 ```python
@@ -584,6 +581,8 @@ axes.flatten()
 2. Kidhome와 Teenhome에서 자녀 및 청소년을 2명둔 사람은 소수라고 볼 수 있습니다.
 3. AcceptedCmp1~5에서 보면, 1의 데이터가 적으므로 켐페인에 참여한 사람은 소수라고 볼 수 있습니다.
 
+
+
 ## 4. 수치형 데이터 탐색
 
 
@@ -605,14 +604,15 @@ plt.show()
 
 그래프를 보면, 다음과 같이 인사이트를 도출 할 수 있습니다.
 
-Year_Birth에서 1970 ~ 1980년생의 거래건수가 가장 많이 발생했다고 볼 수 있습니다.   
-Income에서 30000~70000 사이 가구 소득의 거래건수가 가장 많았다고 볼 수 있습니다.   
-year에서 13년도에 가장 거래건수가 많았다고 볼 수 있습니다.  
-Year_Birth, income, NumDealsPurchases, NumWebPurchases, NumWebVisitsMonth에서 이상치 발생 가능성을 볼 수 있습니다.
+Year_Birth에서 1970 ~ 1980년생의 거래건수가 가장 많이 발생했다고 볼 수 있습니다.     
+Income에서 30000~70000 사이 가구 소득의 거래건수가 가장 많았다고 볼 수 있습니다.     
+year에서 13년도에 가장 거래건수가 많았다고 볼 수 있습니다.    
+Year_Birth, income, NumDealsPurchases, NumWebPurchases, NumWebVisitsMonth에서 이상치 발생 가능성을 볼 수 있습니다.  
 
 ## 5. 이상치 찾기
  
 boxenplot을 이용해 시각화하여 이해를 돕겠습니다.
+
 
 
 ```python
@@ -661,6 +661,7 @@ outliers
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
+        font-size=12px;
     }
 
     .dataframe tbody tr th {
@@ -859,6 +860,7 @@ df_temp28.style.background_gradient(cmap='viridis')
   background-color: #440154;
   color: #f1f1f1;
 }
+
 </style>
 <table id="T_de8de">
   <thead>
@@ -918,7 +920,7 @@ df_temp28.style.background_gradient(cmap='viridis')
     </tr>
   </tbody>
 </table>
-
+{:.scoll-table}
 
 
 
@@ -932,17 +934,3 @@ df_temp28.style.background_gradient(cmap='viridis')
 
 그러므로 Income, NumStorePurchases, NumWebPurchases피쳐들도 상관계수가 0.3 이상이기 때문에 고객의 수입,  매장에서 직접 구매한 횟수, 웹사이트를 통한 구매 건수가 많을 수록 총 제품 소비량이 늘어난다는 결론을 도출 할 수 있겠습니다.
 
-
-
-여러분은 어떤 인사이트를 얻으셨나요?
-
-이번 EDA를 통해 어떤 방식으로 분석을 진행해야겠다는 자그마한 인사이트를 얻으셨으면 좋겠습니다.
-
-여러분도 여러분만의 EDA를 진행하시고 코드공유에 올려주세요!
-
-좋아요와 댓글을 합산하여 가장 높은 점수를 얻으신 분께 데이콘 후드가 제공됩니다!
-
-
-```python
-
-```

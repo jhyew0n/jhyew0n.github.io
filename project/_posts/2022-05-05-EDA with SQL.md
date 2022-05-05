@@ -19,7 +19,7 @@ categories:
 [ 👉 DACON : 소비자 데이터 기반 소비 예측 경진대회 바로가기](https://dacon.io/competitions/official/235893/overview/description)
 
 
-## 데이터 확인
+## 1. 데이터 확인
 
 ### 1) DACON 제공 데이터 설명 확인
 
@@ -157,5 +157,12 @@ FROM train
 | count(*) |
 |:--------:|
 | 1108     |
+
+
+## 2. 데이터 탐색
+
+
+
+
 
 
