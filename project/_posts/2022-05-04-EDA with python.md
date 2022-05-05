@@ -16,15 +16,6 @@ categories:
 {:toc .large-only}
 
 
-```python
-## 테이블 왼쪽 정렬
-%%html
-<style>
-table{float:left}
-</style>
-```
-
-
 <style>
 table{float:left}
 </style>
