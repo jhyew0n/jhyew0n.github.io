@@ -212,6 +212,32 @@ Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no ration
 Absurd가 뭔지 한참 찾았다...
 
 
+> 결과
+
+| Education | count(id) | RAT     |
+|:---------:|-----------|---------|
+| Together  | 296       | 26.7148 |
+| Single    | 234       | 21.1191 |
+| Married   | 415       | 37.4549 |
+| Widow     | 39        | 3.5199  |
+| Divorced  | 120       | 10.8303 |
+| Alone     | 2         | 0.1805  |
+| YOLO      | 1         | 0.0903  |
+| Absurd    | 1         | 0.0903  |
+{:.smaller}
+
+Alone, YOLO, Absurd는 값이 너무 적어서 Single에 포함시킴.
+
+```sql
+UPDATE train
+SET Marital_Status = Single
+WHERE Marital_Status = 
+
+```
+
+
+
+
 Kidhome, Teenhome은 수치형 변수로 보는게 맞을 것 같은데 값의 범위가 좁아서 카테고리형으로 분류한 것 같다.
 이거를 카테고리형으로 바꾸려면 3명 이상 이라는 옵션이 있어야 할 것 같은데, 없다.
 
