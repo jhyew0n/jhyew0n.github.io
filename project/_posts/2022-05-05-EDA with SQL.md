@@ -167,7 +167,7 @@ FROM train
                'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
                'Complain', 'Response']
 
-- **수치형 변수** : ['Year_Birth', 'Income', 'Year', 'Month', 'Day', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
+- **수치형 변수** : ['Year_Birth', 'Income', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
        'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth']
 
 ### 2-1) 카테고리형 변수 탐색
@@ -183,7 +183,7 @@ Basic(중등 졸업), Graduation(학사), Master(석사), PhD(박사), 2n Cycle(
 
 2n Cycle은  뭔지 모르겠다. 
 
-<span style="color:green; font-size:110%">Education 데이터 분포</span>
+<span style="color:green; font-size:110%; font-weight:bold;"> Education 데이터 분포</span>
 
 ```sql
 SELECT Education, count(id), count(id) / sum(count(*)) OVER() AS RAT
@@ -200,6 +200,8 @@ GROUP BY Education;
 | 2n Cycle   | 89        | 8.0325  |
 {:.smaller}
 
+
+<span style="color:green; font-size:110%; font-weight:bold;"> Marital_Status 데이터 분포</span>
 
 ```sql
 SELECT DISTINCT Marital_Status
@@ -270,6 +272,9 @@ GROUP BY Marital_Status;
 {:.smaller}
 
 
+<span style="color:green; font-size:110%; font-weight:bold;"> Kidhome, Teenhome 데이터 분포</span>
+
+
 다음으로
 
 Kidhome, Teenhome은 수치형 변수로 보는게 맞을 것 같은데 값의 범위가 좁아서 카테고리형으로 분류한 것 같다.
@@ -314,7 +319,7 @@ GROUP BY Kidhome;
 왜 Kidhome 1,2 < Teenhome 1,2 일까...?*
 
 
-
+<span style="color:green; font-size:110%; font-weight:bold;"> 그 외 데이터 분포</span>
 
 나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
                       'Complain', 'Response
@@ -327,11 +332,145 @@ FROM train;
 ```
 
 
+
 | sum(AcceptedCmp1) | sum(AcceptedCmp2) | sum(AcceptedCmp3) | sum(AcceptedCmp4) | sum(AcceptedCmp5) | sum(Complain) | sum(Response) |
 |:-----------------:|:-----------------:|:-----------------:|-------------------|-------------------|---------------|---------------|
 |         76        |         17        |         77        |         95        |         80        |       10      |      157      |
 {:.smaller}
 
+
+
+```sql
+SELECT sum(AcceptedCmp1)/1108, sum(AcceptedCmp2)/1108, sum(AcceptedCmp3)/1108, sum(AcceptedCmp4)/1108, sum(AcceptedCmp5)/1108, sum(Complain)/1108, sum(Response)/1108
+FROM train;
+```
+
+
+두번째 캠페인 수용률이 현저히 낮다.
+그 외에는 뚜렷한 경향성은 없는 것 같다.
+
+
+
+
+### 2-2) 수치형 변수 탐색
+
+
+<span style="color:green; font-size:110%; font-weight:bold;"> Year_Birth </span>
+
+
+
+
+연령대를 구간으로 나누어 세어보기.
+
+일단 범위를 알아보자
+
+
+```sql
+SELECT min(year_birth) , max(year_birth)
+FROM train
+```
+
+> 1893 \<= age \< 1996
+
+```sql
+WITH users_with_age AS (
+  SELECT
+    *
+    , 2023 - year_birth AS age
+  FROM train
+)
+, users_with_age_range AS (
+  SELECT
+    id
+    , age
+    , CASE
+        WHEN age BETWEEN 20 AND 30 THEN '20대'
+        WHEN age BETWEEN 30 AND 40 THEN '30대'
+        WHEN age BETWEEN 40 AND 50 THEN '40대'
+        WHEN age BETWEEN 50 AND 60 THEN '50대'
+        WHEN age >= 61 THEN '60대 이상'
+      END
+     AS age_range
+  FROM
+    users_with_age
+)
+
+SELECT
+  age_range
+  , COUNT(1) AS user_count
+  , COUNT(1)*100/1108 AS user_ratio
+FROM
+  users_with_age_range
+GROUP BY
+  age_range
+;
+```
+
+| age_range | user_count | user_ratio |
+|:---:|---|---|
+| 60대 이상 | 347 | 31.3177 |
+| 50대 | 311 | 28.0686 |
+| 40대 | 296 | 26.7148 |
+| 30대 | 147 | 13.2671 |
+| 20대 | 7 | 0.6318 |
+{:.smaller}
+
+
+연령대가 확실히 높은 편.
+
+
+
+<span style="color:green; font-size:110%; font-weight:bold;"> Income </span>
+
+대략적인 소득수준을 파악하기 위해 고객을 5등분 하여 상위 20%, 40%, 60%, 80%, 100%로 나누어 소득 수준을 파악해보았다.
+
+
+```sql
+WITH users_with_decile AS (
+  SELECT
+    id
+    , income
+    , ntile(5) OVER (ORDER BY income DESC) AS decile
+  FROM
+    train
+)
+, decile_with_income AS (
+  SELECT
+    decile
+    ,count(1) AS id_count
+    , AVG(income) AS avg_amount
+    , MIN(income) AS min_amount
+    , MAX(income) AS max_amount
+  FROM
+    users_with_decile
+  GROUP BY
+    decile
+)
+SELECT *
+FROM
+  decile_with_income
+;
+```
+
+
+| decile | id_count | avg(income) | min(income) | max(income) |
+|:---:|---|---|---|---|
+| 1 | 222 | 81502.17117117117 | 71488 | 162397 |
+| 2 | 222 | 65154.792792792796 | 58607 | 71427 |
+| 3 | 222 | 51822.63063063063 | 44802 | 58582 |
+| 4 | 221 | 38516.61990950226 | 32880 | 44794 |
+| 5 | 221 | 23191.647058823528 | 1730 | 32644 |
+{:.smaller}
+
+> 이렇게 보는 것보다 소득 구간을 직접 보는게 나으려나?
+
+
+
+<span style="color:green; font-size:110%; font-weight:bold;"> Recency </span>
+
+
+'Year_Birth', 'Income', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
+       'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth'
 
 
 
