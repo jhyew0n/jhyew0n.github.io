@@ -161,11 +161,12 @@ SELECT count(*)
 FROM train
 ```
 <br>
+
 | count(*) |
 |:--------:|
 | 1108     |
 
-<br><br>
+<br>
 
 ## 2. 데이터 탐색
 
@@ -226,12 +227,15 @@ SELECT DISTINCT Marital_Status
 FROM train;
 ```
 > 'Together', 'Single', 'Married', 'Widow', 'Divorced', 'Alone', 'YOLO', 'Absurd'
+
 <br>
 
 Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no rational or orderly relationship to hyman life)
+
 <br>
 
 Absurd가 뭔지 한참 찾았다...
+
 <br>
 
 
@@ -290,7 +294,7 @@ GROUP BY Marital_Status;
 | Divorced  |       120 | 10.8303 |       79021 |
 {:.smaller}
 
-<br><br>
+<br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Kidhome, Teenhome 데이터 분포</span>
 
@@ -310,6 +314,7 @@ GROUP BY Kidhome;
 ```
 
 > 0, 1, 2
+
 <br>
 
 | Kidhome | count(id) |   RAT   | sum(target) |
@@ -327,6 +332,7 @@ GROUP BY Kidhome;
 ```
 
 > 0, 1, 2
+
 <br>
 
 | Teenhome | count(id) |   RAT   | sum(target) |
@@ -343,7 +349,6 @@ GROUP BY Kidhome;
 
 
 <span style="color:green; font-size:110%; font-weight:bold;"> 그 외 데이터 분포</span>
-
 <br>
 
 나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
@@ -383,6 +388,7 @@ SELECT
   sum(Response)*100/1108
 FROM train;
 ```
+
 <br>
 
 | sum(AcceptedCmp1) | sum(AcceptedCmp2) | sum(AcceptedCmp3) | sum(AcceptedCmp4) | sum(AcceptedCmp5) | sum(Complain) | sum(Response) |
@@ -400,7 +406,7 @@ FROM train;
 
 ### 2-2) 수치형 변수 탐색
 
-<br><br>
+<br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Year_Birth </span>
 
@@ -410,7 +416,6 @@ FROM train;
 
 일단 범위를 알아보자
 
-<br>
 
 ```sql
 SELECT min(year_birth) , max(year_birth)
@@ -455,6 +460,7 @@ GROUP BY
 ;
 ```
 <br>
+
 | age_range | user_count | user_ratio |
 |:---:|---|---|
 | 60대 이상 | 347 | 31.3177 |
@@ -463,15 +469,15 @@ GROUP BY
 | 30대 | 147 | 13.2671 |
 | 20대 | 7 | 0.6318 |
 {:.smaller}
-<br>
 
-  
+<br>
 
 연령대가 확실히 높은 편.
   
-<br><br>
+<br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Income </span>
+
 <br>
 대략적인 소득수준을 파악하기 위해 고객을 5등분 하여 상위 20%, 40%, 60%, 80%, 100%로 나누어 소득 수준을 파악해보았다.
 <br>
@@ -504,6 +510,7 @@ FROM
 ```
 
 <br>
+
 | decile | id_count | avg(income) | min(income) | max(income) |
 |:---:|---|---|---|---|
 | 1 | 222 | 81502.17117117117 | 71488 | 162397 |
@@ -514,16 +521,16 @@ FROM
 {:.smaller}
 
 > 이렇게 보는 것보다 소득 구간을 직접 보는게 나으려나?
-<br><br>
 
 
+<br>
 <span style="color:green; font-size:110%; font-weight:bold;"> Recency </span>
 <br>
-
 
 마지막 구매일 이후 일수
 
 <br>
+
 ```sql
 WITH users_with_decile_recency AS (
   SELECT
@@ -552,6 +559,7 @@ FROM
 ```
 
 <br>
+
 | decile | id_count | avg_amount | min_amount | max_amount |
 |:---:|---|---|---|---|
 | 1 | 222 | 89.5631 | 80 | 99 |
@@ -560,12 +568,13 @@ FROM
 | 4 | 221 | 30.0045 | 20 | 41 |
 | 5 | 221 | 9.0905 | 0 | 20 |
 {:.smaller}
+
 <br>
 
 대충 기록이 100일 안에 구매 기록이 있는 사람들의 데이터인 것 같다.
 일정하게 나뉜 걸 보니 이걸 기준으로 데이터를 추출한 거 같다.
 
-<br><br>
+<br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> 그 외 데이터 분포 </span>
 
@@ -587,6 +596,7 @@ SELECT
 	Store_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum)  AS Store
 FROM sum_table ;
 ```
+
 <br>
 
 
@@ -594,12 +604,14 @@ FROM sum_table ;
 |---|---|---|---|
 | 15.4728 | 27.6743 | 17.7949 | 39.0580 |
 {:.smaller}
+
 <br>
 
 Store 구매 비율이 제일 높다.
 Web , Catal, Deals 순.
 그런데 생각해보니, 일부 인원이 일부 카테고리에서 구매양이 월등히 높으면 정보가 왜곡될 수 있을 것 같다.
 그래서 사람 수대로 계산 해보기로 했다.
+
 <br>
 
 
@@ -620,6 +632,7 @@ SELECT
 FROM sum_table ;
 	
 ```
+
 <br>
 
 
@@ -627,15 +640,18 @@ FROM sum_table ;
 |---|---|---|---|
 | 97.5632 | 97.6534 | 74.8195 | 99.4585 |
 {:.smaller}
+
 <br>
 
 사람수대로 보니 매장에서 대부분 구매 경험이 있다.
 할인된 딜 구매, 웹 구매도 대부분이 경험이 있다.
 
-<br><br>
+<br>
+
 혹시 아무데서도 구매 안한 사람이 있으려나...?
 
 <br>
+
 ```sql
 WITH sign_table AS (
 SELECT *,
@@ -648,7 +664,7 @@ WHERE sign_sum <3
 ORDER BY sign_sum;
 ```
 
-<br><br>
+<br>
 
 | id | Year_Birth | Education | Marital_Status | Income | Kidhome | Teenhome | Dt_Customer | Recency | target | sign_sum |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -679,14 +695,15 @@ ORDER BY sign_sum;
 | 1082 | 1971 | Master | Married | 34109 | 0 | 1 | 06-11-2013 | 39 | 22 | 2 |
 {:.smaller}
 {:.scroll-table}
-<br><br>
+
+<br>
 
 
 
 지난달에 web에 방문한 사람 중,
 web 구매도 한 사람은..?
 
-<br><br>
+<br>
 
 ```sql
 SELECT id, NumWebPurchases, NumWebVisitsMonth, Recency, 
@@ -696,7 +713,8 @@ WHERE NumWebVisitsMonth >0
 	and Recency <32
 ORDER BY purch_ratio ; 
 ```
-<br><br>
+
+<br>
 
 | id | NumWebPurchases | NumWebVisitsMonth | Recency | purch_ratio |
 |:---:|:---:|:---:|:---:|:---:|
@@ -804,32 +822,38 @@ ORDER BY purch_ratio ;
 | 1041 | 1 | 3 | 13 | 33.33 |
 {:.smaller}
 {:.scroll-table}
-<br><br>
 
+<br>
 
 추출하고 보니 웹 구매는 지난달만 포함한게 아니라 인사이트를 얻을 수 없음
-<br><br>
+<br>
 
 
 ### 3. 상관관계 테이블
 
-<br><br>
+<br>
+
 ![png](/assets/img/post/EDA/output_48_1.png)
-<br><br>
+
+<br>
 
 
 > SQL에서는 구현이 어려울 것 같다.....
-<br><br>
+
+
+<br>
 
 income, Web 구매, Catalog 구매, Store 구매 모두 target과 관련이 있다.
 Web 방문은 오히려 많을 수록 음의 상관관계를 가지는게 인상적이다.
 Catalog 구매와 income이 가장 강한 상관관계를 가지고 있음을 알 수 있다.
 
-<br>
+
 <br>
 
 다음 데이터 분석으로 알아보고 싶은 것
+
 <br>
+
 - 성별/연령별 분포 확인해보기 -> 주 타겟층 확인
 - 자녀가 있는/많은 사람들의 구매 경향은?
 - 구매 횟수와 target 크기를 비교하여 한번에 큰 금액을 구매하는 사람들은 누구일까? -> 맞춤형 서비스
