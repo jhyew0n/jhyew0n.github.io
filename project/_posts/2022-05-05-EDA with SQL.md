@@ -17,10 +17,10 @@ categories:
 
 
 [ 👉 DACON : 소비자 데이터 기반 소비 예측 경진대회 바로가기](https://dacon.io/competitions/official/235893/overview/description)
-
+<br>
 
 ## 1. 데이터 확인
-
+<br>
 ### 1) DACON 제공 데이터 설명 확인
 
 |      col_names      | dtype   |                             description                            |
@@ -48,9 +48,10 @@ categories:
 |       Response      | int64   |  고객이 마지막 캠페인에서 제안을 수락한 경우 1, 그렇지 않은 경우 0 |
 |        target       | int64   |                        고객의 제품 총 소비량                       |
 {:.smaller}
+<br><br>
 
 ### 2) Python을 이용해 csv 파일을 Database에 올려줌
-
+<br>
 <details>
 <summary>python 코드 확인</summary>
 <div markdown="1">
@@ -88,18 +89,18 @@ categories:
 
 </div>
 </details>
-
+<br>
   
     
 [코드 참고 블로그](https://velog.io/@actpjk/21.2.14-pandas-pymysql-sqlalchemy-csv%ED%8C%8C%EC%9D%BC%EC%9D%84-MySQL%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95)
 
-  
+<br>  
 
 ```sql
 SELECT *
 FROM train
 ```
-  
+<br>
 
 
 | **id** | **Year_Birth** | **Education** | **Marital_Status** | **Income** | **Kidhome** | **Teenhome** | **Dt_Customer** | **Recency** | **NumDealsPurchases** | **NumWebPurchases** | **NumCatalogPurchases** | **NumStorePurchases** | **NumWebVisitsMonth** | **AcceptedCmp3** | **AcceptedCmp4** | **AcceptedCmp5** | **AcceptedCmp1** | **AcceptedCmp2** | **Complain** | **Response** | **target** | |
@@ -111,14 +112,16 @@ FROM train
 | 4      | 1946           | PhD           | Together           | 64014      | 2           | 1            | 10-06-2014      | 56          | 7                     | 8                   | 2                       | 5                     | 7                     | 0                | 0                | 0                | 1                | 0                | 0            | 0            | 444        |            |
 {:.smaller}
 {:.scroll-table}
+<br><br>
 
 
 ## 3) 테이블 구조 확인
+<br>
 
 ```sql
 DESC train
 ```
-
+<br>
 
 |      **Field**      | **Type** | **Null** | **Default** |
 |:-------------------:|:--------:|:--------:|:-----------:|
@@ -146,20 +149,23 @@ DESC train
 | target              |  bigint  |    YES   |     NULL    |
 {:.smaller}
 {:.scroll-table}
+<br><br>
 
 
 ## 4) 데이터 크기 확인
+<br>
 
 
 ```sql
 SELECT count(*)
 FROM train
 ```
-
+<br>
 | count(*) |
 |:--------:|
 | 1108     |
 
+<br><br>
 
 ## 2. 데이터 탐색
 
@@ -170,33 +176,36 @@ FROM train
 - **수치형 변수** : ['Year_Birth', 'Income', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
        'NumCatalogPurchases', 'NumStorePurchases', 'NumWebVisitsMonth']
 
+<br>
+
 ### 2-1) 카테고리형 변수 탐색
 
-
+<br><br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Education 데이터 분포</span>
 
 
+<br>
 
 ```sql
 SELECT DISTINCT Education
 FROM train;
 ```
 > 'Master', 'Graduation', 'Basic', 'PhD', '2n Cycle'
-
+<br>
 찾아보니 
 Basic(중등 졸업), Graduation(학사), Master(석사), PhD(박사), 2n Cycle(?)
-
+<br>
 2n Cycle은  뭔지 모르겠다.
 
-
+<br>
 
 ```sql
 SELECT Education, count(id), count(id) / sum(count(*)) OVER() AS RAT
 FROM train
 GROUP BY Education;
 ```
-
+<br>
 |  Education | count(id) | RAT     |
 |:----------:|-----------|---------|
 | Master     | 173       | 15.6137 |
@@ -206,24 +215,24 @@ GROUP BY Education;
 | 2n Cycle   | 89        | 8.0325  |
 {:.smaller}
 
-
+<br><br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Marital_Status 데이터 분포</span>
 
-
+<br>
 
 ```sql
 SELECT DISTINCT Marital_Status
 FROM train;
 ```
 > 'Together', 'Single', 'Married', 'Widow', 'Divorced', 'Alone', 'YOLO', 'Absurd'
-
+<br>
 
 Together(동거), Widow(과부), Divorced(이혼), YOLO, Absurd(having no rational or orderly relationship to hyman life)
-
+<br>
 
 Absurd가 뭔지 한참 찾았다...
-
+<br>
 
 
 | Education | count(id) | RAT     |
@@ -238,9 +247,9 @@ Absurd가 뭔지 한참 찾았다...
 | Absurd    | 1         | 0.0903  |
 {:.smaller}
 
-
+<br>
 Alone, YOLO, Absurd는 값이 너무 적어서 Single에 포함시킨다.
-
+<br>
 
 ```sql
 UPDATE train
@@ -249,27 +258,28 @@ WHERE Marital_Status = "YOLO"
 	or Marital_Status = "Absurd"
 	or Marital_Status = "Alone" ;
 ```
-
+<br>
 
 UPDATE 구문으로 데이터를 바꾸고 다시 확인해봤다. 이번에는 소비량 합계도 함께 출력해봤다.
 UPDATA 구문처럼 원본 테이블을 수정하는 경우에는 
-
+<br>
 
 > BEGIN tran
 > COMMIT tran
 
-
+<br>
 혹시 모를 상황을 대비해 트랜잭션을 설정하고 commit하는게 좋은데,
 mysql은 기본적으로 자동 commit이 설정되어 있는 것 같다. 알아서 반영됐다.
 
 
+<br>
 
 ```sql
 SELECT Marital_Status, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
 FROM train
 GROUP BY Marital_Status;
 ```
-
+<br>
 
 | Education | count(id) |   RAT   | sum(target) |
 |:---------:|:---------:|:-------:|:-----------:|
@@ -280,17 +290,18 @@ GROUP BY Marital_Status;
 | Divorced  |       120 | 10.8303 |       79021 |
 {:.smaller}
 
-
+<br><br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Kidhome, Teenhome 데이터 분포</span>
 
-
+<br>
 
 다음으로
-
+<br>
 Kidhome, Teenhome은 수치형 변수로 보는게 맞을 것 같은데 값의 범위가 좁아서 카테고리형으로 분류한 것 같다.
 이거를 카테고리형으로 바꾸려면 3명 이상 이라는 옵션이 있어야 할 것 같은데, 없다.
 
+<br>
 
 ```sql
 SELECT Kidhome, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
@@ -299,7 +310,7 @@ GROUP BY Kidhome;
 ```
 
 > 0, 1, 2
-
+<br>
 
 | Kidhome | count(id) |   RAT   | sum(target) |
 |:-------:|:---------:|:-------:|:-----------:|
@@ -307,7 +318,7 @@ GROUP BY Kidhome;
 |    1    |       418 | 37.7256 |       89295 |
 |    2    |        29 |  2.6173 |        4099 |
 {:.smaller}
-
+<br>
 
 ```sql
 SELECT Teenhome, count(id), count(id)*100 / sum(count(*)) OVER() AS RAT, sum(target)
@@ -316,7 +327,7 @@ GROUP BY Kidhome;
 ```
 
 > 0, 1, 2
-
+<br>
 
 | Teenhome | count(id) |   RAT   | sum(target) |
 |:--------:|:---------:|:-------:|:-----------:|
@@ -324,21 +335,21 @@ GROUP BY Kidhome;
 |     1    |       507 | 45.7581 |      270224 |
 |     2    |        30 |  2.7076 |       19715 |
 {:.smaller}
-
+<br>
 
 *참고로 Kid는 성인 이전의 아이들을 포괄적으로 의미하고 Teen은 그 중 청소년기의 아이들만 지칭하는 것 같은데
 왜 Kidhome 1,2 < Teenhome 1,2 일까...?*
-
+<br><br>
 
 
 <span style="color:green; font-size:110%; font-weight:bold;"> 그 외 데이터 분포</span>
 
-
+<br>
 
 나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
                       'Complain', 'Response
 
-
+<br>
 
 ```sql
 SELECT 
@@ -352,14 +363,14 @@ SELECT
 FROM train;
 ```
 
-
+<br>
 
 | sum(AcceptedCmp1) | sum(AcceptedCmp2) | sum(AcceptedCmp3) | sum(AcceptedCmp4) | sum(AcceptedCmp5) | sum(Complain) | sum(Response) |
 |:-----------------:|:-----------------:|:-----------------:|-------------------|-------------------|---------------|---------------|
 |         76        |         17        |         77        |         95        |         80        |       10      |      157      |
 {:.smaller}
 
-
+<br>
 
 ```sql
 SELECT 
@@ -372,33 +383,34 @@ SELECT
   sum(Response)*100/1108
 FROM train;
 ```
-
+<br>
 
 | sum(AcceptedCmp1) | sum(AcceptedCmp2) | sum(AcceptedCmp3) | sum(AcceptedCmp4) | sum(AcceptedCmp5) | sum(Complain) | sum(Response) |
 |:---:|---|---|---|---|---|---|
 | 6.8592 | 1.5343 | 6.9495 | 8.5740 | 7.2202 | 0.9025 | 14.1697 |
 {:.smaller}
 
-
+<br>
 
 두번째 캠페인 수용률이 유독 낮다.
 그 외에는 뚜렷한 경향성은 없는 것 같다.
-
+<br><br>
 
 
 
 ### 2-2) 수치형 변수 탐색
 
-
+<br><br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Year_Birth </span>
 
-
+<br>
 
 연령대를 구간으로 나누어 세어보기.
 
 일단 범위를 알아보자
 
+<br>
 
 ```sql
 SELECT min(year_birth) , max(year_birth)
@@ -407,7 +419,7 @@ FROM train
 
 > 1893 \<= age \<= 1996
 
-
+<br>
 
 ```sql
 WITH users_with_age AS (
@@ -442,7 +454,7 @@ GROUP BY
   age_range
 ;
 ```
-
+<br>
 | age_range | user_count | user_ratio |
 |:---:|---|---|
 | 60대 이상 | 347 | 31.3177 |
@@ -451,18 +463,18 @@ GROUP BY
 | 30대 | 147 | 13.2671 |
 | 20대 | 7 | 0.6318 |
 {:.smaller}
-
+<br>
 
   
 
 연령대가 확실히 높은 편.
   
-
+<br><br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Income </span>
-
+<br>
 대략적인 소득수준을 파악하기 위해 고객을 5등분 하여 상위 20%, 40%, 60%, 80%, 100%로 나누어 소득 수준을 파악해보았다.
-
+<br>
 
 ```sql
 WITH users_with_decile AS (
@@ -491,7 +503,7 @@ FROM
 ;
 ```
 
-
+<br>
 | decile | id_count | avg(income) | min(income) | max(income) |
 |:---:|---|---|---|---|
 | 1 | 222 | 81502.17117117117 | 71488 | 162397 |
@@ -502,16 +514,16 @@ FROM
 {:.smaller}
 
 > 이렇게 보는 것보다 소득 구간을 직접 보는게 나으려나?
-
+<br><br>
 
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Recency </span>
-
+<br>
 
 
 마지막 구매일 이후 일수
 
-
+<br>
 ```sql
 WITH users_with_decile_recency AS (
   SELECT
@@ -539,7 +551,7 @@ FROM
 ;
 ```
 
-
+<br>
 | decile | id_count | avg_amount | min_amount | max_amount |
 |:---:|---|---|---|---|
 | 1 | 222 | 89.5631 | 80 | 99 |
@@ -548,15 +560,16 @@ FROM
 | 4 | 221 | 30.0045 | 20 | 41 |
 | 5 | 221 | 9.0905 | 0 | 20 |
 {:.smaller}
-
+<br>
 
 대충 기록이 100일 안에 구매 기록이 있는 사람들의 데이터인 것 같다.
 일정하게 나뉜 걸 보니 이걸 기준으로 데이터를 추출한 거 같다.
 
+<br><br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> 그 외 데이터 분포 </span>
 
-
+<br>
 
 ```sql
 WITH sum_table AS (
@@ -574,19 +587,20 @@ SELECT
 	Store_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum)  AS Store
 FROM sum_table ;
 ```
+<br>
 
 
 | Deals | Web | Catal | Store |
 |---|---|---|---|
 | 15.4728 | 27.6743 | 17.7949 | 39.0580 |
 {:.smaller}
-
+<br>
 
 Store 구매 비율이 제일 높다.
 Web , Catal, Deals 순.
 그런데 생각해보니, 일부 인원이 일부 카테고리에서 구매양이 월등히 높으면 정보가 왜곡될 수 있을 것 같다.
 그래서 사람 수대로 계산 해보기로 했다.
-
+<br>
 
 
 ```sql
@@ -606,22 +620,22 @@ SELECT
 FROM sum_table ;
 	
 ```
-
+<br>
 
 
 | Deals | Web | Catal | Store |
 |---|---|---|---|
 | 97.5632 | 97.6534 | 74.8195 | 99.4585 |
 {:.smaller}
-
+<br>
 
 사람수대로 보니 매장에서 대부분 구매 경험이 있다.
 할인된 딜 구매, 웹 구매도 대부분이 경험이 있다.
 
-
+<br><br>
 혹시 아무데서도 구매 안한 사람이 있으려나...?
 
-
+<br>
 ```sql
 WITH sign_table AS (
 SELECT *,
@@ -634,7 +648,7 @@ WHERE sign_sum <3
 ORDER BY sign_sum;
 ```
 
-
+<br><br>
 
 | id | Year_Birth | Education | Marital_Status | Income | Kidhome | Teenhome | Dt_Customer | Recency | target | sign_sum |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
@@ -665,14 +679,14 @@ ORDER BY sign_sum;
 | 1082 | 1971 | Master | Married | 34109 | 0 | 1 | 06-11-2013 | 39 | 22 | 2 |
 {:.smaller}
 {:.scroll-table}
-
+<br><br>
 
 
 
 지난달에 web에 방문한 사람 중,
 web 구매도 한 사람은..?
 
-
+<br><br>
 
 ```sql
 SELECT id, NumWebPurchases, NumWebVisitsMonth, Recency, 
@@ -682,7 +696,7 @@ WHERE NumWebVisitsMonth >0
 	and Recency <32
 ORDER BY purch_ratio ; 
 ```
-
+<br><br>
 
 | id | NumWebPurchases | NumWebVisitsMonth | Recency | purch_ratio |
 |:---:|:---:|:---:|:---:|:---:|
@@ -790,31 +804,32 @@ ORDER BY purch_ratio ;
 | 1041 | 1 | 3 | 13 | 33.33 |
 {:.smaller}
 {:.scroll-table}
-
+<br><br>
 
 
 추출하고 보니 웹 구매는 지난달만 포함한게 아니라 인사이트를 얻을 수 없음
-
+<br><br>
 
 
 ### 3. 상관관계 테이블
 
-
+<br><br>
 ![png](/assets/img/post/EDA/output_48_1.png)
-
+<br><br>
 
 
 > SQL에서는 구현이 어려울 것 같다.....
-
+<br><br>
 
 income, Web 구매, Catalog 구매, Store 구매 모두 target과 관련이 있다.
 Web 방문은 오히려 많을 수록 음의 상관관계를 가지는게 인상적이다.
 Catalog 구매와 income이 가장 강한 상관관계를 가지고 있음을 알 수 있다.
 
-
+<br>
+<br>
 
 다음 데이터 분석으로 알아보고 싶은 것
-
+<br>
 - 성별/연령별 분포 확인해보기 -> 주 타겟층 확인
 - 자녀가 있는/많은 사람들의 구매 경향은?
 - 구매 횟수와 target 크기를 비교하여 한번에 큰 금액을 구매하는 사람들은 누구일까? -> 맞춤형 서비스
@@ -825,8 +840,8 @@ Catalog 구매와 income이 가장 강한 상관관계를 가지고 있음을 �
 - 캠페인을 아무것도 수용하지 않는 사람의 행동 패턴은 무엇인가? -> 캠페인이 문제였는가? 사람이 문제였는가?
 - 5번째 캠페인을 수용한 사람들은 어떤 특징이 있는가? -> 여러번 캠페인을 던져주는 것이 유의미한가?
 
-
-
+<br>
+<br>
 
 등의 질문을 던지며
 알아보기
