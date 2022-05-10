@@ -54,13 +54,13 @@ menu:
     url:               /study/
     submenu :
       - title : Python
-        url : /adpower/
+        url : /python/
       - title : SQL
-        url : /boaz/
+        url : /sql/
       - title : Tableau
         url : /tableau
   - title:             Project
-    url:               /project/ß
+    url:               /project/
   - title:             Favorite
     url:               /favorite/
   - title:             Posts
