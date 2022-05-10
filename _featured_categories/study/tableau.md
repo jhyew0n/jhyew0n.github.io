@@ -1,6 +1,6 @@
 ---
 layout: list
-category: Study
+category: study
 bigtitle: Tableau
 slug: Tableau
 description: >

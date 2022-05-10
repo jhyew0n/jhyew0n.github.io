@@ -58,7 +58,7 @@ menu:
       - title : SQL
         url : /sql/
       - title : Tableau
-        url : /tableau
+        url : /tableau/
   - title:             Project
     url:               /project/
   - title:             Favorite

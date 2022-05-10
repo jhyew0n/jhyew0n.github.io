@@ -1,7 +1,7 @@
 ---
 layout: list
-bigtitle: Study
-slug: Study
+bigtitle: study
+slug: study
 menu: true
 submenu: true
 description: >
