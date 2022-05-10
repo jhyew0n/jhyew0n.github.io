@@ -116,10 +116,10 @@ font:                  Noto Sans, Helvetica, Arial, sans-serif
 
 # The font used for headings. Expects a string that is a valid CSS font-family value.
 # To change font-weight, see _sass/variables.scss
-font_heading:          'Scheherazade New', serif;
+font_heading:          'Scheherazade New', serif
 
 # The font used for code blocks. Expects a string that is a valid CSS font-family value.
-font_code:             'Montserrat', sans-serif;
+font_code:             'Montserrat', sans-serif
 
 defaults:
   # You can use this to provide a default accent color and background for
