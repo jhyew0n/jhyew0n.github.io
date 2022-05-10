@@ -53,12 +53,12 @@ menu:
   - title:             Study
     url:               /study/
     submenu :
-      - title : Python
-        url : /python/
-      - title : SQL
-        url : /sql/
-      - title : Tableau
-        url : /tableau/
+      - title :       Python
+        url :         /python/
+      - title :       SQL
+        url :         /sql/
+      - title :       Tableau
+        url :         /tableau/
   - title:             Project
     url:               /project/
   - title:             Favorite
@@ -91,7 +91,7 @@ paginate_path:         /:num/
 # ---------------------------------------------------------------------------------------
 
 #theme: jekyll-theme-hydejack
-remote_theme: hydecorp/hydejack@v9
+remote_theme:  hydecorp/hydejack@v9
 
 
 # Customizaton
