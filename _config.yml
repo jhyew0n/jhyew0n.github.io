@@ -108,7 +108,7 @@ theme_color:           rgb(25,55,71)
 
 # The string encoding which fonts to fetch from Google Fonts.
 # See: <https://hydejack.com/docs/configuration/>
-google_fonts:          Gaegu:300,400|Montserrat:ital,200,400,600,700,100|Noto+Sans+KR:300,400,500,700|Poppins:300,400,500,600|Scheherazade+New:400,700
+google_fonts:          Gaegu:300,400|Montserrat:200,400,600,700,100|Noto+Sans+KR:300,400,500,700|Poppins:300,400,500,600|Scheherazade+New:400,700
 
 # The text font. Expects a string that is a valid CSS font-family value.
 # To change font-weight, see _sass/variables.scss
@@ -119,7 +119,7 @@ font:                  Noto Sans, Helvetica, Arial, sans-serif
 font_heading:          'Scheherazade New', serif
 
 # The font used for code blocks. Expects a string that is a valid CSS font-family value.
-font_code:             'Montserrat', sans-serif
+font_code:             'Montserrat', sans-serif;
 
 defaults:
   # You can use this to provide a default accent color and background for
@@ -420,21 +420,21 @@ jekyll_compose:
         A short ~160 character description of your post for search engines,
         social media previews, etc.
       image:
-        path: /assets/img/sidebar-bg.jpg
+        path: /assets/img/background.png
     posts:
       layout: post
       description: > 
         A short ~160 character description of your post for search engines,
         social media previews, etc.
       image:
-        path: /assets/img/sidebar-bg.jpg
+        path: /assets/img/background.png
     projects:
       layout: project
       description: > 
         A short ~160 character description of your post for search engines,
         social media previews, etc.
       image:
-        path: /assets/img/sidebar-bg.jpg
+        path: /assets/img/background.png
       links:
         - title: Project Link
           url: https://example.com
