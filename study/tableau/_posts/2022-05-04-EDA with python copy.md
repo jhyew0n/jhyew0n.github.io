@@ -8,7 +8,7 @@ hide_last_modified: true
 hide_description: true
 categories:
   - study
-  - python
+  - tableau
 ---
 
 

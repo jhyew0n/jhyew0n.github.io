@@ -8,7 +8,7 @@ hide_last_modified: false
 hide_description: true
 categories:
   - study
-  - Python
+  - python
 ---
 
 # 코로나 확진자 패턴 분석

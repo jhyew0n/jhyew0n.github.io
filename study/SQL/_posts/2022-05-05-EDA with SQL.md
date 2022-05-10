@@ -8,7 +8,7 @@ hide_last_modified: true
 hide_description: true
 categories:
   - study
-  - SQL
+  - sql
 ---
 
 # 소비자 데이터 기반 소비 예측 with SQL

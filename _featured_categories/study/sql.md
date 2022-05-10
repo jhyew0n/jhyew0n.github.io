@@ -1,8 +1,8 @@
 ---
 layout: list
 category: study
-bigtitle: SQL
-slug: SQL
+bigtitle: sql
+slug: sql
 description: >
   SQL은 또 다른 매력
 

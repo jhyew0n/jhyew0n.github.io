@@ -1,8 +1,8 @@
 ---
 layout: list
 category: study
-bigtitle: Tableau
-slug: Tableau
+bigtitle: tableau
+slug: tableau
 description: >
   태블로는 나의 세상
 

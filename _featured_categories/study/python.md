@@ -1,8 +1,8 @@
 ---
 layout: list
 category: study
-bigtitle: Python
-slug: Python
+bigtitle: python
+slug: python
 description: >
   파이썬으로 이것저것
 

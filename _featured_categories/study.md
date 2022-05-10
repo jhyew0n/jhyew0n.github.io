@@ -12,10 +12,10 @@ description: >
 
 ## Categories
 
-* [Python]{:.heading.flip-title} --- Python
-* [SQL]{:.heading.flip-title} --- SQL
-* [Tableau]{:.heading.flip-title} --- Tableau
+* [python]{:.heading.flip-title} --- Python
+* [sql]{:.heading.flip-title} --- SQL
+* [tableau]{:.heading.flip-title} --- Tableau
 
-[Python]: /python/
-[SQL]: /sql/
-[Tableau]: /tableau/
+[python]: /python/
+[sql]: /sql/
+[tableau]: /tableau/
