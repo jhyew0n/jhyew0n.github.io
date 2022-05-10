@@ -1,14 +1,14 @@
 ---
 layout: list
-bigtitle: study
-slug: study
+bigtitle: Study
+slug: Study
 menu: true
 submenu: true
 description: >
   공부한 기록득
 ---
 
-# Activity
+# Study
 
 ## Categories
 
