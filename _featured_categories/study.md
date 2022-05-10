@@ -1,19 +1,21 @@
 ---
 layout: list
-bigtitle: activity
-slug: activity
+bigtitle: study
+slug: study
 menu: true
 submenu: true
 description: >
-  20살 이후의 활동들
+  공부한 기록득
 ---
 
 # Activity
 
 ## Categories
 
-* [ADPOWER]{:.heading.flip-title} --- ADPOWER
-* [BOAZ]{:.heading.flip-title} --- BOAZ
+* [Python]{:.heading.flip-title} --- Python
+* [SQL]{:.heading.flip-title} --- SQL
+* [Tableau]{:.heading.flip-title} --- Tableau
 
-[ADPOWER]: /adpower/
-[BOAZ]: /boaz/
+[Python]: /python/
+[SQL]: /sql/
+[Tableau]: /tableau/
