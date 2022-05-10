@@ -50,15 +50,17 @@ author:
 menu:
   - title:             About
     url:               /about/
-  - title:             Activity
-    url:               /activity/
+  - title:             Study
+    url:               /study/
     submenu :
-      - title : ADPOWER
+      - title : Python
         url : /adpower/
-      - title : BOAZ
+      - title : SQL
         url : /boaz/
+      - title : Tableau
+        url : /tableau
   - title:             Project
-    url:               /project/
+    url:               /project/ß
   - title:             Favorite
     url:               /favorite/
   - title:             Posts

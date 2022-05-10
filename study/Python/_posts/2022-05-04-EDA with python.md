@@ -7,7 +7,8 @@ sitemap: false
 hide_last_modified: true
 hide_description: true
 categories:
-  - project
+  - study
+  - Python
 ---
 
 

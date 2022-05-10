@@ -7,7 +7,8 @@ sitemap: false
 hide_last_modified: true
 hide_description: true
 categories:
-  - project
+  - study
+  - SQL
 ---
 
 # 소비자 데이터 기반 소비 예측 with SQL
