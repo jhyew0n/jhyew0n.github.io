@@ -108,7 +108,7 @@ theme_color:           rgb(25,55,71)
 
 # The string encoding which fonts to fetch from Google Fonts.
 # See: <https://hydejack.com/docs/configuration/>
-google_fonts:          Gaegu:wght@300;400&family=Montserrat:ital,wght@0,200;0,400;0,600;0,700;1,100;1,300&family=Noto+Sans+KR:wght@300;400;500;700&family=Poppins:wght@300;400;500;600&family=Scheherazade+New:wght@400;700
+google_fonts:          Gaegu:300,400|Montserrat:ital,200,400,600,700,100|Noto+Sans+KR:300,400,500,700|Poppins:300,400,500,600|Scheherazade+New:400,700
 
 # The text font. Expects a string that is a valid CSS font-family value.
 # To change font-weight, see _sass/variables.scss
