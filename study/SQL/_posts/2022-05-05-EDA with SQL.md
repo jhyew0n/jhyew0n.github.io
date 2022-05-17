@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 소비자 데이터를 이용한 소비 예측 with SQL
+title: 소비자 데이터를 이용한 데이터 탐색 with SQL
 description: >
   데이터 분석 스터디 실습, DACON
 sitemap: false
@@ -91,8 +91,8 @@ categories:
 </div>
 </details>
 <br>
-  
-    
+
+
 [코드 참고 블로그](https://velog.io/@actpjk/21.2.14-pandas-pymysql-sqlalchemy-csv%ED%8C%8C%EC%9D%BC%EC%9D%84-MySQL%EC%97%90-%EC%A0%80%EC%9E%A5%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95)
 
 <br>  
@@ -172,7 +172,7 @@ FROM train
 ## 2. 데이터 탐색
 
 - **카테고리형 변수** : ['Education', 'Marital_Status', 'Kidhome', 'Teenhome'
-               'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
+               'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5',
                'Complain', 'Response']
 
 - **수치형 변수** : ['Year_Birth', 'Income', 'Recency', 'NumDealsPurchases', 'NumWebPurchases',
@@ -195,7 +195,7 @@ FROM train;
 ```
 > 'Master', 'Graduation', 'Basic', 'PhD', '2n Cycle'
 <br>
-찾아보니 
+찾아보니
 Basic(중등 졸업), Graduation(학사), Master(석사), PhD(박사), 2n Cycle(?)
 <br>
 2n Cycle은  뭔지 모르겠다.
@@ -259,14 +259,14 @@ Alone, YOLO, Absurd는 값이 너무 적어서 Single에 포함시킨다.
 ```sql
 UPDATE train
 SET Marital_Status = "Single"
-WHERE Marital_Status = "YOLO" 
+WHERE Marital_Status = "YOLO"
 	or Marital_Status = "Absurd"
 	or Marital_Status = "Alone" ;
 ```
 <br>
 
 UPDATE 구문으로 데이터를 바꾸고 다시 확인해봤다. 이번에는 소비량 합계도 함께 출력해봤다.
-UPDATA 구문처럼 원본 테이블을 수정하는 경우에는 
+UPDATA 구문처럼 원본 테이블을 수정하는 경우에는
 <br>
 
 > BEGIN tran
@@ -352,19 +352,19 @@ GROUP BY Kidhome;
 <span style="color:green; font-size:110%; font-weight:bold;"> 그 외 데이터 분포</span>
 <br>
 
-나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5', 
+나머지는 0 또는 1 인 변수 : 'AcceptedCmp1', 'AcceptedCmp2', 'AcceptedCmp3', 'AcceptedCmp4', 'AcceptedCmp5',
                       'Complain', 'Response
 
 <br>
 
 ```sql
-SELECT 
-  sum(AcceptedCmp1), 
-  sum(AcceptedCmp2), 
-  sum(AcceptedCmp3), 
-  sum(AcceptedCmp4), 
-  sum(AcceptedCmp5), 
-  sum(Complain), 
+SELECT
+  sum(AcceptedCmp1),
+  sum(AcceptedCmp2),
+  sum(AcceptedCmp3),
+  sum(AcceptedCmp4),
+  sum(AcceptedCmp5),
+  sum(Complain),
   sum(Response)
 FROM train;
 ```
@@ -379,13 +379,13 @@ FROM train;
 <br>
 
 ```sql
-SELECT 
-  sum(AcceptedCmp1)*100/1108, 
-  sum(AcceptedCmp2)*100/1108, 
-  sum(AcceptedCmp3)*100/1108, 
-  sum(AcceptedCmp4)*100/1108, 
-  sum(AcceptedCmp5)*100/1108, 
-  sum(Complain)*100/1108, 
+SELECT
+  sum(AcceptedCmp1)*100/1108,
+  sum(AcceptedCmp2)*100/1108,
+  sum(AcceptedCmp3)*100/1108,
+  sum(AcceptedCmp4)*100/1108,
+  sum(AcceptedCmp5)*100/1108,
+  sum(Complain)*100/1108,
   sum(Response)*100/1108
 FROM train;
 ```
@@ -474,7 +474,7 @@ GROUP BY
 <br>
 
 연령대가 확실히 높은 편.
-  
+
 <br>
 
 <span style="color:green; font-size:110%; font-weight:bold;"> Income </span>
@@ -583,17 +583,17 @@ FROM
 
 ```sql
 WITH sum_table AS (
-SELECT 
-	SUM(SIGN(NumDealsPurchases)) AS Deals_sum, 
-	SUM(SIGN(NumWebPurchases)) AS Web_sum, 
-	SUM(SIGN(NumCatalogPurchases)) AS Catal_sum, 
+SELECT
+	SUM(SIGN(NumDealsPurchases)) AS Deals_sum,
+	SUM(SIGN(NumWebPurchases)) AS Web_sum,
+	SUM(SIGN(NumCatalogPurchases)) AS Catal_sum,
 	SUM(SIGN(NumStorePurchases)) AS Store_sum
 FROM train
 )
 SELECT
-	Deals_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum) AS Deals, 
-	Web_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum) AS Web, 
-	Catal_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum) AS Catal, 
+	Deals_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum) AS Deals,
+	Web_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum) AS Web,
+	Catal_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum) AS Catal,
 	Store_sum*100/(Deals_sum+Web_sum+Catal_sum+Store_sum)  AS Store
 FROM sum_table ;
 ```
@@ -618,20 +618,20 @@ Web , Catal, Deals 순.
 
 ```sql
 WITH sum_table AS (
-SELECT 
-	SUM(SIGN(NumDealsPurchases)) AS Deals_sum, 
-	SUM(SIGN(NumWebPurchases)) AS Web_sum, 
-	SUM(SIGN(NumCatalogPurchases)) AS Catal_sum, 
+SELECT
+	SUM(SIGN(NumDealsPurchases)) AS Deals_sum,
+	SUM(SIGN(NumWebPurchases)) AS Web_sum,
+	SUM(SIGN(NumCatalogPurchases)) AS Catal_sum,
 	SUM(SIGN(NumStorePurchases)) AS Store_sum
 FROM train
 )
 SELECT
-	Deals_sum*100/1108 AS Deals, 
-	Web_sum*100/1108 AS Web, 
-	Catal_sum*100/1108 AS Catal, 
+	Deals_sum*100/1108 AS Deals,
+	Web_sum*100/1108 AS Web,
+	Catal_sum*100/1108 AS Catal,
 	Store_sum*100/1108  AS Store
 FROM sum_table ;
-	
+
 ```
 
 <br>
@@ -661,7 +661,7 @@ FROM train
 )
 SELECT id, Year_Birth, Education, Marital_Status, Income, Kidhome, Teenhome, Dt_Customer, Recency, target,sign_sum
 FROM sign_table
-WHERE sign_sum <3 
+WHERE sign_sum <3
 ORDER BY sign_sum;
 ```
 
@@ -707,12 +707,12 @@ web 구매도 한 사람은..?
 <br>
 
 ```sql
-SELECT id, NumWebPurchases, NumWebVisitsMonth, Recency, 
+SELECT id, NumWebPurchases, NumWebVisitsMonth, Recency,
 	ROUND(NumWebPurchases*100/NumWebVisitsMonth,2) AS purch_ratio
 FROM train
 WHERE NumWebVisitsMonth >0
 	and Recency <32
-ORDER BY purch_ratio ; 
+ORDER BY purch_ratio ;
 ```
 
 <br>
@@ -860,7 +860,7 @@ Catalog 구매와 income이 가장 강한 상관관계를 가지고 있음을 �
 - 구매 횟수와 target 크기를 비교하여 한번에 큰 금액을 구매하는 사람들은 누구일까? -> 맞춤형 서비스
 - catalog를 주로 이용하는 사람들은 누구인가? -> catalog 활성화는 유믜미한가?
 - 웹사이트를 방문하지만, 구매는 안하는 사람들의 특징은 무엇일까? -> 캠페인을 통해 구매를 유도하는 것이 좋을까?
-- Deals 구매를 많이 하는 사람들은 누구인가? -> 혼자인 사람이 많은가? 
+- Deals 구매를 많이 하는 사람들은 누구인가? -> 혼자인 사람이 많은가?
 - 결혼 상태, 교육 수준별 소비 크기가 다른가? 얼만큼 다른가? -> 멤버십을 상태에 따라 다른 프로그램을 운영할 수 있지 않을까?
 - 캠페인을 아무것도 수용하지 않는 사람의 행동 패턴은 무엇인가? -> 캠페인이 문제였는가? 사람이 문제였는가?
 - 5번째 캠페인을 수용한 사람들은 어떤 특징이 있는가? -> 여러번 캠페인을 던져주는 것이 유의미한가?
@@ -870,12 +870,3 @@ Catalog 구매와 income이 가장 강한 상관관계를 가지고 있음을 �
 
 등의 질문을 던지며
 알아보기
-
-
-
-
-
-
-
-
-
