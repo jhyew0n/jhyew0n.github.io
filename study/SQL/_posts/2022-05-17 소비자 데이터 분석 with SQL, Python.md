@@ -47,7 +47,7 @@ categories:
 |       Complain      | int64   |    고객이 지난 2년 동안 불만을 제기한 경우 1, 그렇지 않은 경우 0   |
 |       Response      | int64   |  고객이 마지막 캠페인에서 제안을 수락한 경우 1, 그렇지 않은 경우 0 |
 |        target       | int64   |                        고객의 제품 총 소비량                       |
-{:.smaller}
+
 
 
 <span style="color:#268C81; font-size:120%; font-weight:bold;"> 🔎  지난 EDA로 궁금한 것 </span>
@@ -95,11 +95,6 @@ import seaborn as sns
 
 ```python
 import matplotlib.pyplot as plt
-```
-
-
-```python
-pw = 'bemore42'
 ```
 
 ## pymysql 세팅
