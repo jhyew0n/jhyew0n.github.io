@@ -1849,6 +1849,11 @@ vis4
 상관관계는 잘 모르겠다.
 
 
+# 3. 구매 방식별 타겟 맞춤형 전략
+
+## 1) 구매 빈도 제일 높은 것끼리 묶어 비교해보기.
+
+
 ```python
 sql = '''WITH
              users_with_age AS (
@@ -1898,30 +1903,574 @@ df = pd.read_sql(sql, db)
 print(df)
 ```
 
-          NumDealsPurchases  age   Education  target   Marital category
-    0                    10   41      Master     541  Together      40대
-    1                     1   53  Graduation     899    Single      50대
-    2                     2   64  Graduation     901  Together      60대
-    3                     2   41       Basic      50  Together      40대
-    4                     7   69         PhD     444  Together      60대
-    ...                 ...  ...         ...     ...       ...      ...
-    1103                  5   59  Graduation     241  Together      50대
-    1104                  3   29  Graduation     147  Together      20대
-    1105                  1   40      Master      30  Together      30대
-    1106                  8   41  Graduation     447    Single      40대
-    1107                  6   63         PhD     302    Single      60대
-    
-    [1108 rows x 6 columns]
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
-      warnings.warn(
+## 2) 카탈로그를 주로 이용하는 사람들의 특징
 
 
 
 ```python
-df.sort_values('NumDealsPurchases', ascending=False).head(30)
+sql = '''WITH
+             users_with_age AS (
+              SELECT
+                *
+                , 2015 - Year_Birth AS age
+              FROM train
+            )
+            , users_with_category AS (
+              SELECT
+                *
+                , CASE
+                    WHEN Marital_Status="Married" THEN 'Together'
+                    WHEN Marital_Status="Divorced" THEN 'Single'
+                    WHEN Marital_Status="Widow" THEN 'Single'
+                    ELSE Marital_Status
+                  END
+                    AS Marital
+                , CASE
+                    WHEN age BETWEEN 20 AND 30 THEN '20대'
+                    WHEN age BETWEEN 30 AND 40 THEN '30대'
+                    WHEN age BETWEEN 40 AND 50 THEN '40대'
+                    WHEN age BETWEEN 50 AND 60 THEN '50대'
+                    WHEN age BETWEEN 60 AND 70 THEN '60대'
+                    WHEN age >=71 THEN '70대 이상'
+                  END
+                 AS category
+              FROM
+                users_with_age
+            )
+
+
+        SELECT 
+            NumCatalogPurchases,
+            age,
+            Education,
+            target,
+            Marital,
+            category
+        FROM users_with_category
+        ; '''
 ```
+
+
+```python
+df = pd.read_sql(sql, db)
+df
+```
+
+          NumCatalogPurchases  age   Education  target   Marital category
+    0                       1   41      Master     541  Together      40대
+    1                      10   53  Graduation     899    Single      50대
+    2                       6   64  Graduation     901  Together      60대
+    3                       0   41       Basic      50  Together      40대
+    4                       2   69         PhD     444  Together      60대
+    ...                   ...  ...         ...     ...       ...      ...
+    1103                    1   59  Graduation     241  Together      50대
+    1104                    0   29  Graduation     147  Together      20대
+    1105                    0   40      Master      30  Together      30대
+    1106                    1   41  Graduation     447    Single      40대
+    1107                    1   63         PhD     302    Single      60대
+    
+    [1108 rows x 6 columns]
+
+
+```python
+df['NumCatalogPurchases'].describe()
+```
+
+
+
+
+    count    1108.000000
+    mean        2.690433
+    std         2.792236
+    min         0.000000
+    25%         0.000000
+    50%         2.000000
+    75%         4.000000
+    max        11.000000
+    Name: NumCatalogPurchases, dtype: float64
+
+
+
+
+```python
+# 2회 이상 Catalog 구매한 사람들의 수
+df['Cata_cnt'] = df['NumCatalogPurchases'].apply(lambda x : 1 if (x>=2) else 0)
+pd.pivot_table(df,values = 'Cata_cnt', index='category',
+    columns='Marital',
+    aggfunc = 'sum').style.background_gradient(cmap='Oranges')
+```
+
+
+
+
+<style type="text/css">
+#T_58b28_row0_col0 {
+  background-color: #fda762;
+  color: #000000;
+}
+#T_58b28_row0_col1 {
+  background-color: #fee1c4;
+  color: #000000;
+}
+#T_58b28_row1_col0 {
+  background-color: #fb8836;
+  color: #f1f1f1;
+}
+#T_58b28_row1_col1 {
+  background-color: #de4e05;
+  color: #f1f1f1;
+}
+#T_58b28_row2_col0 {
+  background-color: #bd3e02;
+  color: #f1f1f1;
+}
+#T_58b28_row2_col1, #T_58b28_row3_col0 {
+  background-color: #7f2704;
+  color: #f1f1f1;
+}
+#T_58b28_row3_col1 {
+  background-color: #a83703;
+  color: #f1f1f1;
+}
+#T_58b28_row4_col0 {
+  background-color: #fd9243;
+  color: #000000;
+}
+#T_58b28_row4_col1 {
+  background-color: #f36f1a;
+  color: #f1f1f1;
+}
+#T_58b28_row5_col0, #T_58b28_row5_col1 {
+  background-color: #fff5eb;
+  color: #000000;
+}
+</style>
+<table id="T_58b28">
+  <thead>
+    <tr>
+      <th class="index_name level0" >Marital</th>
+      <th id="T_58b28_level0_col0" class="col_heading level0 col0" >Single</th>
+      <th id="T_58b28_level0_col1" class="col_heading level0 col1" >Together</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >category</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_58b28_level0_row0" class="row_heading level0 row0" >20대</th>
+      <td id="T_58b28_row0_col0" class="data row0 col0" >28</td>
+      <td id="T_58b28_row0_col1" class="data row0 col1" >21</td>
+    </tr>
+    <tr>
+      <th id="T_58b28_level0_row1" class="row_heading level0 row1" >30대</th>
+      <td id="T_58b28_row1_col0" class="data row1 col0" >35</td>
+      <td id="T_58b28_row1_col1" class="data row1 col1" >77</td>
+    </tr>
+    <tr>
+      <th id="T_58b28_level0_row2" class="row_heading level0 row2" >40대</th>
+      <td id="T_58b28_row2_col0" class="data row2 col0" >53</td>
+      <td id="T_58b28_row2_col1" class="data row2 col1" >104</td>
+    </tr>
+    <tr>
+      <th id="T_58b28_level0_row3" class="row_heading level0 row3" >50대</th>
+      <td id="T_58b28_row3_col0" class="data row3 col0" >64</td>
+      <td id="T_58b28_row3_col1" class="data row3 col1" >91</td>
+    </tr>
+    <tr>
+      <th id="T_58b28_level0_row4" class="row_heading level0 row4" >60대</th>
+      <td id="T_58b28_row4_col0" class="data row4 col0" >33</td>
+      <td id="T_58b28_row4_col1" class="data row4 col1" >65</td>
+    </tr>
+    <tr>
+      <th id="T_58b28_level0_row5" class="row_heading level0 row5" >70대 이상</th>
+      <td id="T_58b28_row5_col0" class="data row5 col0" >4</td>
+      <td id="T_58b28_row5_col1" class="data row5 col1" >6</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+```python
+# 비율로 확인
+df['Cata_ratio'] = df['Cata_cnt']*100/df['Cata_cnt'].sum()
+pd.pivot_table(df,values = 'Cata_ratio', index='category',
+    columns='Marital',
+    aggfunc = 'sum').style.background_gradient(cmap='Oranges').format(precision=1)
+```
+
+
+
+
+<style type="text/css">
+#T_a8d9c_row0_col0 {
+  background-color: #fda762;
+  color: #000000;
+}
+#T_a8d9c_row0_col1 {
+  background-color: #fee1c4;
+  color: #000000;
+}
+#T_a8d9c_row1_col0 {
+  background-color: #fb8836;
+  color: #f1f1f1;
+}
+#T_a8d9c_row1_col1 {
+  background-color: #de4e05;
+  color: #f1f1f1;
+}
+#T_a8d9c_row2_col0 {
+  background-color: #bd3e02;
+  color: #f1f1f1;
+}
+#T_a8d9c_row2_col1, #T_a8d9c_row3_col0 {
+  background-color: #7f2704;
+  color: #f1f1f1;
+}
+#T_a8d9c_row3_col1 {
+  background-color: #a83703;
+  color: #f1f1f1;
+}
+#T_a8d9c_row4_col0 {
+  background-color: #fd9243;
+  color: #000000;
+}
+#T_a8d9c_row4_col1 {
+  background-color: #f36f1a;
+  color: #f1f1f1;
+}
+#T_a8d9c_row5_col0, #T_a8d9c_row5_col1 {
+  background-color: #fff5eb;
+  color: #000000;
+}
+</style>
+<table id="T_a8d9c">
+  <thead>
+    <tr>
+      <th class="index_name level0" >Marital</th>
+      <th id="T_a8d9c_level0_col0" class="col_heading level0 col0" >Single</th>
+      <th id="T_a8d9c_level0_col1" class="col_heading level0 col1" >Together</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >category</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_a8d9c_level0_row0" class="row_heading level0 row0" >20대</th>
+      <td id="T_a8d9c_row0_col0" class="data row0 col0" >4.8</td>
+      <td id="T_a8d9c_row0_col1" class="data row0 col1" >3.6</td>
+    </tr>
+    <tr>
+      <th id="T_a8d9c_level0_row1" class="row_heading level0 row1" >30대</th>
+      <td id="T_a8d9c_row1_col0" class="data row1 col0" >6.0</td>
+      <td id="T_a8d9c_row1_col1" class="data row1 col1" >13.3</td>
+    </tr>
+    <tr>
+      <th id="T_a8d9c_level0_row2" class="row_heading level0 row2" >40대</th>
+      <td id="T_a8d9c_row2_col0" class="data row2 col0" >9.1</td>
+      <td id="T_a8d9c_row2_col1" class="data row2 col1" >17.9</td>
+    </tr>
+    <tr>
+      <th id="T_a8d9c_level0_row3" class="row_heading level0 row3" >50대</th>
+      <td id="T_a8d9c_row3_col0" class="data row3 col0" >11.0</td>
+      <td id="T_a8d9c_row3_col1" class="data row3 col1" >15.7</td>
+    </tr>
+    <tr>
+      <th id="T_a8d9c_level0_row4" class="row_heading level0 row4" >60대</th>
+      <td id="T_a8d9c_row4_col0" class="data row4 col0" >5.7</td>
+      <td id="T_a8d9c_row4_col1" class="data row4 col1" >11.2</td>
+    </tr>
+    <tr>
+      <th id="T_a8d9c_level0_row5" class="row_heading level0 row5" >70대 이상</th>
+      <td id="T_a8d9c_row5_col0" class="data row5 col0" >0.7</td>
+      <td id="T_a8d9c_row5_col1" class="data row5 col1" >1.0</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+카탈로그 구매는 확실히 함께 사는 사람들에게 두드러진 특징으로 나타난다. (20대 제외)  
+40-50대에서 이용률이 많음  
+이유가 무엇일까?  
+Catalog는 함께 사는 사람들이 좋아할만한 품목들이 더 많은가?
+
+## 3) 자녀가 있는/많은 사람들의 구매 경향은?
+
+
+
+```python
+sql = '''WITH
+             users_with_age AS (
+              SELECT
+                *
+                , 2015 - Year_Birth AS age
+              FROM train
+            )
+            , users_with_category AS (
+              SELECT
+                *
+                , CASE
+                    WHEN Marital_Status="Married" THEN 'Together'
+                    WHEN Marital_Status="Divorced" THEN 'Single'
+                    WHEN Marital_Status="Widow" THEN 'Single'
+                    ELSE Marital_Status
+                  END
+                    AS Marital
+                , CASE
+                    WHEN age BETWEEN 20 AND 30 THEN '20대'
+                    WHEN age BETWEEN 30 AND 40 THEN '30대'
+                    WHEN age BETWEEN 40 AND 50 THEN '40대'
+                    WHEN age BETWEEN 50 AND 60 THEN '50대'
+                    WHEN age BETWEEN 60 AND 70 THEN '60대'
+                    WHEN age >=71 THEN '70대 이상'
+                  END
+                 AS category
+              FROM
+                users_with_age
+            )
+
+
+        SELECT 
+            NumCatalogPurchases,
+            NumWebPurchases,
+            NumDealsPurchases,
+            NumStorePurchases,
+            NumWebVisitsMonth,
+            Teenhome,
+            Kidhome,
+            target,
+            Marital,
+            category
+        FROM users_with_category
+        ; '''
+```
+
+
+```python
+df = pd.read_sql(sql, db)
+df
+```
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NumCatalogPurchases</th>
+      <th>NumWebPurchases</th>
+      <th>NumDealsPurchases</th>
+      <th>NumStorePurchases</th>
+      <th>NumWebVisitsMonth</th>
+      <th>Teenhome</th>
+      <th>Kidhome</th>
+      <th>target</th>
+      <th>Marital</th>
+      <th>category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>7</td>
+      <td>10</td>
+      <td>8</td>
+      <td>7</td>
+      <td>1</td>
+      <td>1</td>
+      <td>541</td>
+      <td>Together</td>
+      <td>40대</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10</td>
+      <td>5</td>
+      <td>1</td>
+      <td>7</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>899</td>
+      <td>Single</td>
+      <td>50대</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6</td>
+      <td>6</td>
+      <td>2</td>
+      <td>9</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>901</td>
+      <td>Together</td>
+      <td>60대</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3</td>
+      <td>8</td>
+      <td>0</td>
+      <td>1</td>
+      <td>50</td>
+      <td>Together</td>
+      <td>40대</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>8</td>
+      <td>7</td>
+      <td>5</td>
+      <td>7</td>
+      <td>1</td>
+      <td>2</td>
+      <td>444</td>
+      <td>Together</td>
+      <td>60대</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1103</th>
+      <td>1</td>
+      <td>3</td>
+      <td>5</td>
+      <td>6</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>241</td>
+      <td>Together</td>
+      <td>50대</td>
+    </tr>
+    <tr>
+      <th>1104</th>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>8</td>
+      <td>0</td>
+      <td>1</td>
+      <td>147</td>
+      <td>Together</td>
+      <td>20대</td>
+    </tr>
+    <tr>
+      <th>1105</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>30</td>
+      <td>Together</td>
+      <td>30대</td>
+    </tr>
+    <tr>
+      <th>1106</th>
+      <td>1</td>
+      <td>6</td>
+      <td>8</td>
+      <td>7</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>447</td>
+      <td>Single</td>
+      <td>40대</td>
+    </tr>
+    <tr>
+      <th>1107</th>
+      <td>1</td>
+      <td>4</td>
+      <td>6</td>
+      <td>6</td>
+      <td>6</td>
+      <td>2</td>
+      <td>0</td>
+      <td>302</td>
+      <td>Single</td>
+      <td>60대</td>
+    </tr>
+  </tbody>
+</table>
+<p>1108 rows × 10 columns</p>
+</div>
+
+
+
+
+```python
+df['child']=df['Teenhome']+df['Kidhome']
+```
+
+
+```python
+from sklearn import preprocessing
+```
+
+
+```python
+train_corr = df[['child','NumCatalogPurchases','NumWebPurchases','NumDealsPurchases','NumStorePurchases','NumWebVisitsMonth']]
+scaler= preprocessing.MinMaxScaler() 
+train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
+corr28 = train_corr.corr(method= 'pearson')
+
+corr28[['child']]
+```
+
+    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_4392/1244991705.py:3: SettingWithCopyWarning: 
+    A value is trying to be set on a copy of a slice from a DataFrame.
+    Try using .loc[row_indexer,col_indexer] = value instead
+    
+    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+      train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
+
 
 
 
@@ -1944,284 +2493,33 @@ df.sort_values('NumDealsPurchases', ascending=False).head(30)
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>NumDealsPurchases</th>
-      <th>age</th>
-      <th>Education</th>
-      <th>target</th>
-      <th>Marital</th>
-      <th>category</th>
+      <th>child</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>91</th>
-      <td>15</td>
-      <td>52</td>
-      <td>PhD</td>
-      <td>9</td>
-      <td>Together</td>
-      <td>50대</td>
+      <th>child</th>
+      <td>1.000000</td>
     </tr>
     <tr>
-      <th>182</th>
-      <td>15</td>
-      <td>44</td>
-      <td>Graduation</td>
-      <td>8</td>
-      <td>Single</td>
-      <td>40대</td>
+      <th>NumCatalogPurchases</th>
+      <td>-0.440880</td>
     </tr>
     <tr>
-      <th>778</th>
-      <td>15</td>
-      <td>48</td>
-      <td>2n Cycle</td>
-      <td>1082</td>
-      <td>Together</td>
-      <td>40대</td>
+      <th>NumWebPurchases</th>
+      <td>-0.133453</td>
     </tr>
     <tr>
-      <th>946</th>
-      <td>13</td>
-      <td>42</td>
-      <td>Master</td>
-      <td>747</td>
-      <td>Together</td>
-      <td>40대</td>
+      <th>NumDealsPurchases</th>
+      <td>0.460249</td>
     </tr>
     <tr>
-      <th>736</th>
-      <td>12</td>
-      <td>59</td>
-      <td>Graduation</td>
-      <td>684</td>
-      <td>Together</td>
-      <td>50대</td>
+      <th>NumStorePurchases</th>
+      <td>-0.315581</td>
     </tr>
     <tr>
-      <th>12</th>
-      <td>11</td>
-      <td>66</td>
-      <td>Master</td>
-      <td>1178</td>
-      <td>Together</td>
-      <td>60대</td>
-    </tr>
-    <tr>
-      <th>510</th>
-      <td>11</td>
-      <td>66</td>
-      <td>Master</td>
-      <td>1178</td>
-      <td>Together</td>
-      <td>60대</td>
-    </tr>
-    <tr>
-      <th>1038</th>
-      <td>11</td>
-      <td>58</td>
-      <td>PhD</td>
-      <td>1019</td>
-      <td>Together</td>
-      <td>50대</td>
-    </tr>
-    <tr>
-      <th>0</th>
-      <td>10</td>
-      <td>41</td>
-      <td>Master</td>
-      <td>541</td>
-      <td>Together</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>157</th>
-      <td>10</td>
-      <td>45</td>
-      <td>Graduation</td>
-      <td>1392</td>
-      <td>Single</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>414</th>
-      <td>10</td>
-      <td>39</td>
-      <td>Graduation</td>
-      <td>515</td>
-      <td>Together</td>
-      <td>30대</td>
-    </tr>
-    <tr>
-      <th>690</th>
-      <td>10</td>
-      <td>44</td>
-      <td>PhD</td>
-      <td>736</td>
-      <td>Together</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>1067</th>
-      <td>10</td>
-      <td>52</td>
-      <td>PhD</td>
-      <td>793</td>
-      <td>Together</td>
-      <td>50대</td>
-    </tr>
-    <tr>
-      <th>205</th>
-      <td>9</td>
-      <td>43</td>
-      <td>Master</td>
-      <td>642</td>
-      <td>Together</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>211</th>
-      <td>9</td>
-      <td>49</td>
-      <td>Graduation</td>
-      <td>433</td>
-      <td>Single</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>864</th>
-      <td>9</td>
-      <td>57</td>
-      <td>PhD</td>
-      <td>496</td>
-      <td>Single</td>
-      <td>50대</td>
-    </tr>
-    <tr>
-      <th>1002</th>
-      <td>8</td>
-      <td>44</td>
-      <td>Graduation</td>
-      <td>467</td>
-      <td>Together</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>791</th>
-      <td>8</td>
-      <td>49</td>
-      <td>Master</td>
-      <td>610</td>
-      <td>Together</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>1106</th>
-      <td>8</td>
-      <td>41</td>
-      <td>Graduation</td>
-      <td>447</td>
-      <td>Single</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>155</th>
-      <td>8</td>
-      <td>40</td>
-      <td>Graduation</td>
-      <td>415</td>
-      <td>Single</td>
-      <td>30대</td>
-    </tr>
-    <tr>
-      <th>701</th>
-      <td>8</td>
-      <td>63</td>
-      <td>2n Cycle</td>
-      <td>1120</td>
-      <td>Single</td>
-      <td>60대</td>
-    </tr>
-    <tr>
-      <th>1074</th>
-      <td>8</td>
-      <td>36</td>
-      <td>Graduation</td>
-      <td>653</td>
-      <td>Together</td>
-      <td>30대</td>
-    </tr>
-    <tr>
-      <th>898</th>
-      <td>8</td>
-      <td>50</td>
-      <td>2n Cycle</td>
-      <td>1826</td>
-      <td>Single</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>361</th>
-      <td>8</td>
-      <td>53</td>
-      <td>PhD</td>
-      <td>929</td>
-      <td>Together</td>
-      <td>50대</td>
-    </tr>
-    <tr>
-      <th>344</th>
-      <td>8</td>
-      <td>62</td>
-      <td>PhD</td>
-      <td>480</td>
-      <td>Together</td>
-      <td>60대</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>7</td>
-      <td>62</td>
-      <td>PhD</td>
-      <td>1314</td>
-      <td>Together</td>
-      <td>60대</td>
-    </tr>
-    <tr>
-      <th>367</th>
-      <td>7</td>
-      <td>34</td>
-      <td>PhD</td>
-      <td>906</td>
-      <td>Together</td>
-      <td>30대</td>
-    </tr>
-    <tr>
-      <th>541</th>
-      <td>7</td>
-      <td>44</td>
-      <td>PhD</td>
-      <td>235</td>
-      <td>Together</td>
-      <td>40대</td>
-    </tr>
-    <tr>
-      <th>306</th>
-      <td>7</td>
-      <td>61</td>
-      <td>Graduation</td>
-      <td>500</td>
-      <td>Together</td>
-      <td>60대</td>
-    </tr>
-    <tr>
-      <th>236</th>
-      <td>7</td>
-      <td>43</td>
-      <td>Graduation</td>
-      <td>1027</td>
-      <td>Together</td>
-      <td>40대</td>
+      <th>NumWebVisitsMonth</th>
+      <td>0.396654</td>
     </tr>
   </tbody>
 </table>
@@ -2229,55 +2527,705 @@ df.sort_values('NumDealsPurchases', ascending=False).head(30)
 
 
 
+child와 상관관계가 높은 것  
+아이가 있을 수록 카탈로그 구매 감소, 할인된 구매 증가, 지난달 웹방문 증가  
+<br>
+-> 추론해보면, 아이가 있으니 카탈로그 볼 시간이 없나? 경제적인 것을 중요시해서 할인된 구매를 하고 주로 웹방문을 하나?
+
 
 ```python
+df.groupby('child').mean()[['NumCatalogPurchases','NumWebPurchases','NumDealsPurchases','NumStorePurchases','NumWebVisitsMonth', 'target']]\
+.style.background_gradient(cmap='Oranges').format(precision=1)
+```
 
+
+
+
+<style type="text/css">
+#T_bd57d_row0_col0, #T_bd57d_row0_col1, #T_bd57d_row0_col3, #T_bd57d_row0_col5, #T_bd57d_row2_col2, #T_bd57d_row3_col4 {
+  background-color: #7f2704;
+  color: #f1f1f1;
+}
+#T_bd57d_row0_col2, #T_bd57d_row0_col4, #T_bd57d_row3_col0, #T_bd57d_row3_col1, #T_bd57d_row3_col3, #T_bd57d_row3_col5 {
+  background-color: #fff5eb;
+  color: #000000;
+}
+#T_bd57d_row1_col0 {
+  background-color: #fdbf86;
+  color: #000000;
+}
+#T_bd57d_row1_col1 {
+  background-color: #ae3903;
+  color: #f1f1f1;
+}
+#T_bd57d_row1_col2 {
+  background-color: #fa8532;
+  color: #f1f1f1;
+}
+#T_bd57d_row1_col3 {
+  background-color: #fb8735;
+  color: #f1f1f1;
+}
+#T_bd57d_row1_col4 {
+  background-color: #c34002;
+  color: #f1f1f1;
+}
+#T_bd57d_row1_col5 {
+  background-color: #fdd0a2;
+  color: #000000;
+}
+#T_bd57d_row2_col0 {
+  background-color: #feeddb;
+  color: #000000;
+}
+#T_bd57d_row2_col1 {
+  background-color: #fdc590;
+  color: #000000;
+}
+#T_bd57d_row2_col3 {
+  background-color: #fedcb9;
+  color: #000000;
+}
+#T_bd57d_row2_col4 {
+  background-color: #912e04;
+  color: #f1f1f1;
+}
+#T_bd57d_row2_col5 {
+  background-color: #fff5ea;
+  color: #000000;
+}
+#T_bd57d_row3_col2 {
+  background-color: #8b2c04;
+  color: #f1f1f1;
+}
+</style>
+<table id="T_bd57d">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_bd57d_level0_col0" class="col_heading level0 col0" >NumCatalogPurchases</th>
+      <th id="T_bd57d_level0_col1" class="col_heading level0 col1" >NumWebPurchases</th>
+      <th id="T_bd57d_level0_col2" class="col_heading level0 col2" >NumDealsPurchases</th>
+      <th id="T_bd57d_level0_col3" class="col_heading level0 col3" >NumStorePurchases</th>
+      <th id="T_bd57d_level0_col4" class="col_heading level0 col4" >NumWebVisitsMonth</th>
+      <th id="T_bd57d_level0_col5" class="col_heading level0 col5" >target</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >child</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_bd57d_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_bd57d_row0_col0" class="data row0 col0" >4.7</td>
+      <td id="T_bd57d_row0_col1" class="data row0 col1" >4.5</td>
+      <td id="T_bd57d_row0_col2" class="data row0 col2" >1.1</td>
+      <td id="T_bd57d_row0_col3" class="data row0 col3" >7.4</td>
+      <td id="T_bd57d_row0_col4" class="data row0 col4" >3.6</td>
+      <td id="T_bd57d_row0_col5" class="data row0 col5" >1096.9</td>
+    </tr>
+    <tr>
+      <th id="T_bd57d_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_bd57d_row1_col0" class="data row1 col0" >2.1</td>
+      <td id="T_bd57d_row1_col1" class="data row1 col1" >4.3</td>
+      <td id="T_bd57d_row1_col2" class="data row1 col2" >2.5</td>
+      <td id="T_bd57d_row1_col3" class="data row1 col3" >5.7</td>
+      <td id="T_bd57d_row1_col4" class="data row1 col4" >5.9</td>
+      <td id="T_bd57d_row1_col5" class="data row1 col5" >482.0</td>
+    </tr>
+    <tr>
+      <th id="T_bd57d_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_bd57d_row2_col0" class="data row2 col0" >1.2</td>
+      <td id="T_bd57d_row2_col1" class="data row2 col1" >3.5</td>
+      <td id="T_bd57d_row2_col2" class="data row2 col2" >3.8</td>
+      <td id="T_bd57d_row2_col3" class="data row2 col3" >4.5</td>
+      <td id="T_bd57d_row2_col4" class="data row2 col4" >6.3</td>
+      <td id="T_bd57d_row2_col5" class="data row2 col5" >279.9</td>
+    </tr>
+    <tr>
+      <th id="T_bd57d_level0_row3" class="row_heading level0 row3" >3</th>
+      <td id="T_bd57d_row3_col0" class="data row3 col0" >1.0</td>
+      <td id="T_bd57d_row3_col1" class="data row3 col1" >3.0</td>
+      <td id="T_bd57d_row3_col2" class="data row3 col2" >3.6</td>
+      <td id="T_bd57d_row3_col3" class="data row3 col3" >3.8</td>
+      <td id="T_bd57d_row3_col4" class="data row3 col4" >6.5</td>
+      <td id="T_bd57d_row3_col5" class="data row3 col5" >275.5</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+아이가 많을수록 구매량이 적다.   
+상대적으로 아이가 많을 수록 할인된 구매가 많고 웹 방문이 많은 편인데,  
+경제적 문제를 생각해볼 수 있을 것 같다.
+
+# 4. 웹 방문 빈도수가 오히려 target을 떨어뜨리는 이유?
+
+
+
+```python
+sql = '''WITH
+             users_with_age AS (
+              SELECT
+                *
+                , 2015 - Year_Birth AS age
+              FROM train
+            )
+            , users_with_category AS (
+              SELECT
+                *
+                , CASE
+                    WHEN Marital_Status="Married" THEN 'Together'
+                    WHEN Marital_Status="Divorced" THEN 'Single'
+                    WHEN Marital_Status="Widow" THEN 'Single'
+                    ELSE Marital_Status
+                  END
+                    AS Marital
+                , CASE
+                    WHEN age BETWEEN 20 AND 30 THEN '20대'
+                    WHEN age BETWEEN 30 AND 40 THEN '30대'
+                    WHEN age BETWEEN 40 AND 50 THEN '40대'
+                    WHEN age BETWEEN 50 AND 60 THEN '50대'
+                    WHEN age BETWEEN 60 AND 70 THEN '60대'
+                    WHEN age >=71 THEN '70대 이상'
+                  END
+                 AS category
+              FROM
+                users_with_age
+            )
+
+
+        SELECT 
+            NumCatalogPurchases,
+            NumWebPurchases,
+            NumDealsPurchases,
+            NumStorePurchases,
+            NumWebVisitsMonth,
+            age,
+            Teenhome,
+            Kidhome,
+            target,
+            Marital,
+            category,
+            Education
+        FROM users_with_category
+        ; '''
 ```
 
 
 ```python
-
+df = pd.read_sql(sql, db)
+df
 ```
+
+    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
+      warnings.warn(
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NumCatalogPurchases</th>
+      <th>NumWebPurchases</th>
+      <th>NumDealsPurchases</th>
+      <th>NumStorePurchases</th>
+      <th>NumWebVisitsMonth</th>
+      <th>age</th>
+      <th>Teenhome</th>
+      <th>Kidhome</th>
+      <th>target</th>
+      <th>Marital</th>
+      <th>category</th>
+      <th>Education</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>7</td>
+      <td>10</td>
+      <td>8</td>
+      <td>7</td>
+      <td>41</td>
+      <td>1</td>
+      <td>1</td>
+      <td>541</td>
+      <td>Together</td>
+      <td>40대</td>
+      <td>Master</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10</td>
+      <td>5</td>
+      <td>1</td>
+      <td>7</td>
+      <td>1</td>
+      <td>53</td>
+      <td>1</td>
+      <td>0</td>
+      <td>899</td>
+      <td>Single</td>
+      <td>50대</td>
+      <td>Graduation</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>6</td>
+      <td>6</td>
+      <td>2</td>
+      <td>9</td>
+      <td>3</td>
+      <td>64</td>
+      <td>1</td>
+      <td>0</td>
+      <td>901</td>
+      <td>Together</td>
+      <td>60대</td>
+      <td>Graduation</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3</td>
+      <td>8</td>
+      <td>41</td>
+      <td>0</td>
+      <td>1</td>
+      <td>50</td>
+      <td>Together</td>
+      <td>40대</td>
+      <td>Basic</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>8</td>
+      <td>7</td>
+      <td>5</td>
+      <td>7</td>
+      <td>69</td>
+      <td>1</td>
+      <td>2</td>
+      <td>444</td>
+      <td>Together</td>
+      <td>60대</td>
+      <td>PhD</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1103</th>
+      <td>1</td>
+      <td>3</td>
+      <td>5</td>
+      <td>6</td>
+      <td>4</td>
+      <td>59</td>
+      <td>1</td>
+      <td>0</td>
+      <td>241</td>
+      <td>Together</td>
+      <td>50대</td>
+      <td>Graduation</td>
+    </tr>
+    <tr>
+      <th>1104</th>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>8</td>
+      <td>29</td>
+      <td>0</td>
+      <td>1</td>
+      <td>147</td>
+      <td>Together</td>
+      <td>20대</td>
+      <td>Graduation</td>
+    </tr>
+    <tr>
+      <th>1105</th>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>6</td>
+      <td>40</td>
+      <td>0</td>
+      <td>1</td>
+      <td>30</td>
+      <td>Together</td>
+      <td>30대</td>
+      <td>Master</td>
+    </tr>
+    <tr>
+      <th>1106</th>
+      <td>1</td>
+      <td>6</td>
+      <td>8</td>
+      <td>7</td>
+      <td>8</td>
+      <td>41</td>
+      <td>1</td>
+      <td>1</td>
+      <td>447</td>
+      <td>Single</td>
+      <td>40대</td>
+      <td>Graduation</td>
+    </tr>
+    <tr>
+      <th>1107</th>
+      <td>1</td>
+      <td>4</td>
+      <td>6</td>
+      <td>6</td>
+      <td>6</td>
+      <td>63</td>
+      <td>2</td>
+      <td>0</td>
+      <td>302</td>
+      <td>Single</td>
+      <td>60대</td>
+      <td>PhD</td>
+    </tr>
+  </tbody>
+</table>
+<p>1108 rows × 12 columns</p>
+</div>
+
+
+
+## 1) 평균 방문 경향
+
+
+```python
+df['NumWebVisitsMonth'].describe()
+```
+
+
+
+
+    count    1108.000000
+    mean        5.348375
+    std         2.405115
+    min         0.000000
+    25%         3.000000
+    50%         6.000000
+    75%         7.000000
+    max        20.000000
+    Name: NumWebVisitsMonth, dtype: float64
+
+
+
+절반 이상은 지난달 6번 이상 웹에 방문했다.
+
+## 2) web 방문 빈도가 높은 사람들의 성별+연령
+
+
+```python
+pd.pivot_table(df[df['NumWebVisitsMonth']>=6], 
+               index = 'Marital',
+               columns='category', 
+               values='target', 
+               aggfunc='count').style.background_gradient(cmap='Oranges').format(precision=1)
+```
+
+
+
+
+<style type="text/css">
+#T_b2bc7_row0_col0, #T_b2bc7_row0_col1, #T_b2bc7_row0_col2, #T_b2bc7_row0_col3, #T_b2bc7_row0_col4, #T_b2bc7_row0_col5, #T_b2bc7_row1_col5 {
+  background-color: #fff5eb;
+  color: #000000;
+}
+#T_b2bc7_row1_col0, #T_b2bc7_row1_col1, #T_b2bc7_row1_col2, #T_b2bc7_row1_col3, #T_b2bc7_row1_col4 {
+  background-color: #7f2704;
+  color: #f1f1f1;
+}
+</style>
+<table id="T_b2bc7">
+  <thead>
+    <tr>
+      <th class="index_name level0" >category</th>
+      <th id="T_b2bc7_level0_col0" class="col_heading level0 col0" >20대</th>
+      <th id="T_b2bc7_level0_col1" class="col_heading level0 col1" >30대</th>
+      <th id="T_b2bc7_level0_col2" class="col_heading level0 col2" >40대</th>
+      <th id="T_b2bc7_level0_col3" class="col_heading level0 col3" >50대</th>
+      <th id="T_b2bc7_level0_col4" class="col_heading level0 col4" >60대</th>
+      <th id="T_b2bc7_level0_col5" class="col_heading level0 col5" >70대 이상</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >Marital</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+      <th class="blank col5" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_b2bc7_level0_row0" class="row_heading level0 row0" >Single</th>
+      <td id="T_b2bc7_row0_col0" class="data row0 col0" >23.0</td>
+      <td id="T_b2bc7_row0_col1" class="data row0 col1" >45.0</td>
+      <td id="T_b2bc7_row0_col2" class="data row0 col2" >69.0</td>
+      <td id="T_b2bc7_row0_col3" class="data row0 col3" >39.0</td>
+      <td id="T_b2bc7_row0_col4" class="data row0 col4" >24.0</td>
+      <td id="T_b2bc7_row0_col5" class="data row0 col5" >3.0</td>
+    </tr>
+    <tr>
+      <th id="T_b2bc7_level0_row1" class="row_heading level0 row1" >Together</th>
+      <td id="T_b2bc7_row1_col0" class="data row1 col0" >37.0</td>
+      <td id="T_b2bc7_row1_col1" class="data row1 col1" >101.0</td>
+      <td id="T_b2bc7_row1_col2" class="data row1 col2" >139.0</td>
+      <td id="T_b2bc7_row1_col3" class="data row1 col3" >58.0</td>
+      <td id="T_b2bc7_row1_col4" class="data row1 col4" >43.0</td>
+      <td id="T_b2bc7_row1_col5" class="data row1 col5" >nan</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+할인된 구매와 유사하게,함께 사는 사람들이 확실히 웹방문도 많이 하는 편  
+그 중에서도 30-40대의 방문 빈도가 높은편  
+
+
+```python
+pd.pivot_table(df[df['NumWebVisitsMonth']>=6], 
+               index = 'Marital',
+               columns='Education', 
+               values='target', 
+               aggfunc='count').style.background_gradient(cmap='Oranges').format(precision=1)
+```
+
+
+
+
+<style type="text/css">
+#T_6ed12_row0_col0, #T_6ed12_row0_col1, #T_6ed12_row0_col2, #T_6ed12_row0_col3, #T_6ed12_row0_col4 {
+  background-color: #fff5eb;
+  color: #000000;
+}
+#T_6ed12_row1_col0, #T_6ed12_row1_col1, #T_6ed12_row1_col2, #T_6ed12_row1_col3, #T_6ed12_row1_col4 {
+  background-color: #7f2704;
+  color: #f1f1f1;
+}
+</style>
+<table id="T_6ed12">
+  <thead>
+    <tr>
+      <th class="index_name level0" >Education</th>
+      <th id="T_6ed12_level0_col0" class="col_heading level0 col0" >2n Cycle</th>
+      <th id="T_6ed12_level0_col1" class="col_heading level0 col1" >Basic</th>
+      <th id="T_6ed12_level0_col2" class="col_heading level0 col2" >Graduation</th>
+      <th id="T_6ed12_level0_col3" class="col_heading level0 col3" >Master</th>
+      <th id="T_6ed12_level0_col4" class="col_heading level0 col4" >PhD</th>
+    </tr>
+    <tr>
+      <th class="index_name level0" >Marital</th>
+      <th class="blank col0" >&nbsp;</th>
+      <th class="blank col1" >&nbsp;</th>
+      <th class="blank col2" >&nbsp;</th>
+      <th class="blank col3" >&nbsp;</th>
+      <th class="blank col4" >&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_6ed12_level0_row0" class="row_heading level0 row0" >Single</th>
+      <td id="T_6ed12_row0_col0" class="data row0 col0" >14</td>
+      <td id="T_6ed12_row0_col1" class="data row0 col1" >4</td>
+      <td id="T_6ed12_row0_col2" class="data row0 col2" >110</td>
+      <td id="T_6ed12_row0_col3" class="data row0 col3" >30</td>
+      <td id="T_6ed12_row0_col4" class="data row0 col4" >45</td>
+    </tr>
+    <tr>
+      <th id="T_6ed12_level0_row1" class="row_heading level0 row1" >Together</th>
+      <td id="T_6ed12_row1_col0" class="data row1 col0" >32</td>
+      <td id="T_6ed12_row1_col1" class="data row1 col1" >14</td>
+      <td id="T_6ed12_row1_col2" class="data row1 col2" >199</td>
+      <td id="T_6ed12_row1_col3" class="data row1 col3" >60</td>
+      <td id="T_6ed12_row1_col4" class="data row1 col4" >74</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+학력보다는 나이의 문제일 것 같음
+
+## 3) web 방문 빈도가 높은 사람들의 구매 패턴
 
 
 ```python
 
+train_corr = df[['age','NumCatalogPurchases','NumWebPurchases','NumDealsPurchases','NumStorePurchases','NumWebVisitsMonth','target']]
+scaler= preprocessing.MinMaxScaler() 
+train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
+corr28 = train_corr.corr(method= 'pearson')
+
+corr28[['NumWebVisitsMonth']]
+```
+
+    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_4392/829271823.py:3: SettingWithCopyWarning: 
+    A value is trying to be set on a copy of a slice from a DataFrame.
+    Try using .loc[row_indexer,col_indexer] = value instead
+    
+    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+      train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
+
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>NumWebVisitsMonth</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>age</th>
+      <td>-0.094419</td>
+    </tr>
+    <tr>
+      <th>NumCatalogPurchases</th>
+      <td>-0.513101</td>
+    </tr>
+    <tr>
+      <th>NumWebPurchases</th>
+      <td>-0.085937</td>
+    </tr>
+    <tr>
+      <th>NumDealsPurchases</th>
+      <td>0.378053</td>
+    </tr>
+    <tr>
+      <th>NumStorePurchases</th>
+      <td>-0.429612</td>
+    </tr>
+    <tr>
+      <th>NumWebVisitsMonth</th>
+      <td>1.000000</td>
+    </tr>
+    <tr>
+      <th>target</th>
+      <td>-0.488252</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+웹 방문은 카탈로그 구매횟수와 반비례 관계가 있는 편이다.-> 카탈로그와 웹의 반대되는 특성  
+의외로 나이와는 선형관계가 없어보인다.  
+할인된 구매는 유일한 양의 상관관계.  
+전제 소비량과 음의 상관관계가 있는 것이 인상깊다.
+
+
+```python
+import seaborn as sns
 ```
 
 
 ```python
-
+sns.scatterplot(data=df, x='NumWebVisitsMonth', y='target')
 ```
+
+
+
+
+    <AxesSubplot:xlabel='NumWebVisitsMonth', ylabel='target'>
+
+
+
+
+    
+![png](/assets/img/post/Cus_Ana/output_106_1.png)
+    
+
 
 
 ```python
-
+sns.scatterplot(data=df, x='NumWebVisitsMonth', y='NumDealsPurchases')
 ```
 
 
-```python
-
-```
 
 
-```python
-
-#fetch 메서드(조회결과 콘솔창에서 보기 위함)
-rows = curs.fetchall()
-print(rows)
- 
-
-```
+    <AxesSubplot:xlabel='NumWebVisitsMonth', ylabel='NumDealsPurchases'>
 
 
-```python
-
-```
 
 
-```python
+    
+![png](/assets/img/post/Cus_Ana/output_107_1.png)
+    
 
-```
 
 
 ```python
