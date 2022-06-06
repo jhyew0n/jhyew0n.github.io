@@ -47,7 +47,7 @@ categories:
 |       Complain      | int64   |    고객이 지난 2년 동안 불만을 제기한 경우 1, 그렇지 않은 경우 0   |
 |       Response      | int64   |  고객이 마지막 캠페인에서 제안을 수락한 경우 1, 그렇지 않은 경우 0 |
 |        target       | int64   |                        고객의 제품 총 소비량                       |
-
+{:.smaller}
 
 
 <span style="color:#268C81; font-size:120%; font-weight:bold;"> 🔎  지난 EDA로 궁금한 것 </span>
@@ -85,15 +85,7 @@ categories:
 import pandas as pd
 import pymysql
 from sqlalchemy import create_engine
-```
-
-
-```python
 import seaborn as sns
-```
-
-
-```python
 import matplotlib.pyplot as plt
 ```
 
@@ -154,12 +146,6 @@ curs.execute(sql)
 
 
 
-
-    5
-
-
-
-
 ```python
 # postgre SQL
 SELECT Marital_Status,
@@ -174,59 +160,35 @@ GROUP BY Marital_Status ;
 ```
 
 
-      Input In [47]
-        COALESCE( SUM(CASE WHEN category='20대' THEN 1 END), 0) as 20s,
-                                                                   ^
-    SyntaxError: invalid decimal literal
-
-
-
 
 ```python
 df = pd.read_sql(sql, db)
 print(df)
 ```
 
-      Marital_Status   20s    30s    40s   50s   60s  70s
-    0       Together  25.0   72.0   88.0  68.0  43.0  0.0
-    1         Single  53.0   55.0   57.0  49.0  21.0  3.0
-    2        Married  34.0  108.0  138.0  74.0  54.0  6.0
-    3          Widow   0.0    3.0    9.0   9.0  17.0  1.0
-    4       Divorced   4.0   26.0   44.0  31.0  12.0  3.0
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
-      warnings.warn(
+| Marital_Status | 20s | 30s | 40s | 50s | 60s | 70s |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Together | 25 | 72 | 88 | 68 | 43 | 0 |
+| Single | 53 | 55 | 57 | 49 | 21 | 3 |
+| Married | 34 | 108 | 138 | 74 | 54 | 6 |
+| Widow | 0 | 3 | 9 | 9 | 17 | 1 |
+| Divorced | 4 | 26 | 44 | 31 | 12 | 3 |
+{:.smaller}
 
 
 
 ```python
 df['Marital_Status']=df['Marital_Status'].replace('Married','Together').replace('Widow','Single').replace('Divorced','Single')
-```
 
-
-```python
 custom = df.groupby('Marital_Status').sum().reset_index()
-```
 
-
-```python
 custom.index = custom['Marital_Status']
-```
 
-
-```python
 del custom['Marital_Status']
-```
 
-
-```python
 for i in custom.columns :
     custom[i]=custom[i].astype(int)
-```
 
-
-```python
 custom.style.background_gradient(cmap='Oranges')
 ```
 
@@ -292,15 +254,9 @@ custom.style.background_gradient(cmap='Oranges')
 
 ```python
 total = sum(list(custom.sum()))
-```
 
-
-```python
 round(custom*100/total,2).style.background_gradient(cmap='Oranges').set_precision(1)
 ```
-
-    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_8405/3479166196.py:1: FutureWarning: this method is deprecated in favour of `Styler.format(precision=..)`
-      round(custom*100/total,2).style.background_gradient(cmap='Oranges').set_precision(1)
 
 
 
@@ -366,11 +322,6 @@ round(custom*100/total,2).style.background_gradient(cmap='Oranges').set_precisio
 ```python
 pd.DataFrame(custom.sum(axis=0)*100/total).style.background_gradient(cmap='Oranges').set_precision(1)
 ```
-
-    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_8405/720542787.py:1: FutureWarning: this method is deprecated in favour of `Styler.format(precision=..)`
-      pd.DataFrame(custom.sum(axis=0)*100/total).style.background_gradient(cmap='Oranges').set_precision(1)
-
-
 
 
 
@@ -443,11 +394,10 @@ pd.DataFrame(custom.sum(axis=0)*100/total).style.background_gradient(cmap='Orang
 print(custom.sum(axis=1))
 ```
 
-    Marital_Status
-    Single      397
-    Together    710
-    dtype: int64
-
+  Marital_Status  
+  Single      397  
+  Together    710  
+  dtype: int64  
 
   - 구매횟수가 많은 사람들은?
 
@@ -503,27 +453,18 @@ df = pd.read_sql(sql, db)
 print(df)
 ```
 
-        Marital      20s      30s       40s      50s      60s     70s
-    0  Together  31490.0  94966.0  123795.0  93759.0  75285.0  8337.0
-    1    Single  32901.0  44112.0   63077.0  72645.0  38659.0  4623.0
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
-      warnings.warn(
-
+| Marital | 20s | 30s | 40s | 50s | 60s | 70s |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Together | 31490 | 94966 | 123795 | 93759 | 75285 | 8337 |
+| Single | 32901 | 44112 | 63077 | 72645 | 38659 | 4623 |
+{:.smaller}
 
 
 ```python
 df.index = df['Marital']
-```
 
-
-```python
 del df['Marital']
-```
 
-
-```python
 total2 = sum(list(df.sum()))
 ```
 
@@ -532,11 +473,6 @@ total2 = sum(list(df.sum()))
 # 소비량 비율
 (df*100/total2).style.background_gradient(cmap='Oranges').set_precision(1)
 ```
-
-    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_8405/535086250.py:1: FutureWarning: this method is deprecated in favour of `Styler.format(precision=..)`
-      (df*100/total2).style.background_gradient(cmap='Oranges').set_precision(1)
-
-
 
 
 
@@ -595,17 +531,10 @@ total2 = sum(list(df.sum()))
 
 
 
-
-
 ```python
 # 고객수
 round(custom*100/total,2).style.background_gradient(cmap='Oranges').set_precision(1)
 ```
-
-    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_8405/3479166196.py:1: FutureWarning: this method is deprecated in favour of `Styler.format(precision=..)`
-      round(custom*100/total,2).style.background_gradient(cmap='Oranges').set_precision(1)
-
-
 
 
 
@@ -664,7 +593,6 @@ round(custom*100/total,2).style.background_gradient(cmap='Oranges').set_precisio
 
 
 
-
 비교적 50대부터 고객수에 비해 쓰는 소비량이 큰 편
 
   - 구매 횟수가 많은 유형
@@ -717,64 +645,17 @@ sql = '''WITH
 
 ```python
 df = pd.read_sql(sql, db)
-print(df)
 ```
 
-          NumWebPurchases  NumCatalogPurchases  NumStorePurchases  age  target  \
-    0                   7                    1                  8   41     541   
-    1                   5                   10                  7   53     899   
-    2                   6                    6                  9   64     901   
-    3                   3                    0                  3   41      50   
-    4                   8                    2                  5   69     444   
-    ...               ...                  ...                ...  ...     ...   
-    1103                3                    1                  6   59     241   
-    1104                3                    0                  4   29     147   
-    1105                1                    0                  2   40      30   
-    1106                6                    1                  7   41     447   
-    1107                4                    1                  6   63     302   
-    
-           Marital category  
-    0     Together      40대  
-    1       Single      50대  
-    2     Together      60대  
-    3     Together      40대  
-    4     Together      60대  
-    ...        ...      ...  
-    1103  Together      50대  
-    1104  Together      20대  
-    1105  Together      30대  
-    1106    Single      40대  
-    1107    Single      60대  
-    
-    [1108 rows x 7 columns]
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
-      warnings.warn(
 
 
 
 ```python
 df['count']= df['NumWebPurchases']+df['NumCatalogPurchases']+df['NumStorePurchases']
-```
-
-
-```python
 df =df.iloc[:,3:]
-```
 
-
-```python
 CPP = df.groupby(['category','Marital']).agg({'age':'count', 'count':'sum'}).reset_index()
-```
-
-
-```python
 CPP['cpp']=CPP['count']/CPP['age']
-```
-
-
-```python
 CPP[['category','Marital','cpp']].style.background_gradient(cmap='Oranges')
 ```
 
@@ -1053,10 +934,6 @@ df
 
 ```python
 df['tpc'] = df['target']/df['count']
-```
-
-
-```python
 df = df[df['count']>0]
 ```
 
@@ -1065,21 +942,6 @@ df = df[df['count']>0]
 # 결혼 상태, 연령별 1회당 소비량
 sns.barplot(data=df, x='category', y='tpc', hue='Marital', ci=None)
 ```
-
-
-
-
-    <AxesSubplot:xlabel='category', ylabel='tpc'>
-
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/IPython/core/pylabtools.py:151: UserWarning: Glyph 45824 (\N{HANGUL SYLLABLE DAE}) missing from current font.
-      fig.canvas.print_figure(bytes_io, **kw)
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/IPython/core/pylabtools.py:151: UserWarning: Glyph 51060 (\N{HANGUL SYLLABLE I}) missing from current font.
-      fig.canvas.print_figure(bytes_io, **kw)
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/IPython/core/pylabtools.py:151: UserWarning: Glyph 49345 (\N{HANGUL SYLLABLE SANG}) missing from current font.
-      fig.canvas.print_figure(bytes_io, **kw)
-
 
 
     
@@ -1194,18 +1056,6 @@ sns.countplot(data=vis, x='category',hue='Marital')
 # togeter가 확실히 많다.
 ```
 
-
-
-
-    <AxesSubplot:xlabel='category', ylabel='count'>
-
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/IPython/core/pylabtools.py:151: UserWarning: Glyph 45824 (\N{HANGUL SYLLABLE DAE}) missing from current font.
-      fig.canvas.print_figure(bytes_io, **kw)
-
-
-
     
 ![png](/assets/img/post/Cus_Ana/output_49_2.png)
     
@@ -1273,41 +1123,7 @@ sql = '''WITH
 
 ```python
 df = pd.read_sql(sql, db)
-print(df)
 ```
-
-          AcceptedCmp1  AcceptedCmp2  AcceptedCmp3  AcceptedCmp4  AcceptedCmp5  \
-    0                0             0             0             0             0   
-    1                0             0             1             0             0   
-    2                0             0             0             0             0   
-    3                0             0             0             0             0   
-    4                1             0             0             0             0   
-    ...            ...           ...           ...           ...           ...   
-    1103             0             0             0             0             0   
-    1104             0             0             0             0             0   
-    1105             0             0             1             0             0   
-    1106             0             0             0             0             0   
-    1107             0             0             0             0             0   
-    
-           Education  age  target   Marital category  
-    0         Master   41     541  Together      40대  
-    1     Graduation   53     899    Single      50대  
-    2     Graduation   64     901  Together      60대  
-    3          Basic   41      50  Together      40대  
-    4            PhD   69     444  Together      60대  
-    ...          ...  ...     ...       ...      ...  
-    1103  Graduation   59     241  Together      50대  
-    1104  Graduation   29     147  Together      20대  
-    1105      Master   40      30  Together      30대  
-    1106  Graduation   41     447    Single      40대  
-    1107         PhD   63     302    Single      60대  
-    
-    [1108 rows x 10 columns]
-
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
-      warnings.warn(
-
 
 
 ```python
@@ -1315,7 +1131,6 @@ vis = df.groupby(['AcceptedCmp1','AcceptedCmp2','AcceptedCmp3','AcceptedCmp4','A
 .agg({'age':'mean','Education':'count', 'target':'mean'}).reset_index()
 vis[vis['Education']>=10].style.background_gradient(cmap='Oranges')
 ```
-
 
 
 
@@ -1488,11 +1303,11 @@ print(df[df['AcceptedCmp4']==1]['age'].mean())
 print(df[df['AcceptedCmp5']==1]['age'].mean())
 ```
 
-    48.55263157894737
-    49.64705882352941
-    43.311688311688314
-    50.747368421052634
-    46.775
+  48.55263157894737
+  49.64705882352941
+  43.311688311688314
+  50.747368421052634
+  46.775
 
 
 이걸 보고 고연령대는 상대적으로 빨리 캠페인에 반응하는데 어린 연령층은 그 뒤에 반응한다고 할 수 있을까.....?
@@ -1536,11 +1351,11 @@ print(df[df['cmp']==4]['age'].mean())
 print(df[df['cmp']==5]['age'].mean())
 ```
 
-    48.55263157894737
-    48.55555555555556
-    43.696969696969695
-    51.56716417910448
-    48.083333333333336
+  48.55263157894737
+  48.55555555555556
+  43.696969696969695
+  51.56716417910448
+  48.083333333333336
 
 
 처음 반응한 캠페인은 큰 차이가 없는 것으로 보인다....
@@ -1550,10 +1365,7 @@ print(df[df['cmp']==5]['age'].mean())
 
 ```python
 df['total_cmp']=df['AcceptedCmp1']+df['AcceptedCmp2']+df['AcceptedCmp3']+df['AcceptedCmp4']+df['AcceptedCmp5']
-```
 
-
-```python
 df.groupby('Education').agg({'total_cmp':'mean','cmp':'mean','age':'mean', 'target':'count'})
 ```
 
@@ -1953,31 +1765,8 @@ sql = '''WITH
 
 ```python
 df = pd.read_sql(sql, db)
-df
-```
-
-          NumCatalogPurchases  age   Education  target   Marital category
-    0                       1   41      Master     541  Together      40대
-    1                      10   53  Graduation     899    Single      50대
-    2                       6   64  Graduation     901  Together      60대
-    3                       0   41       Basic      50  Together      40대
-    4                       2   69         PhD     444  Together      60대
-    ...                   ...  ...         ...     ...       ...      ...
-    1103                    1   59  Graduation     241  Together      50대
-    1104                    0   29  Graduation     147  Together      20대
-    1105                    0   40      Master      30  Together      30대
-    1106                    1   41  Graduation     447    Single      40대
-    1107                    1   63         PhD     302    Single      60대
-    
-    [1108 rows x 6 columns]
-
-
-```python
 df['NumCatalogPurchases'].describe()
 ```
-
-
-
 
     count    1108.000000
     mean        2.690433
@@ -2452,10 +2241,7 @@ df['child']=df['Teenhome']+df['Kidhome']
 
 ```python
 from sklearn import preprocessing
-```
 
-
-```python
 train_corr = df[['child','NumCatalogPurchases','NumWebPurchases','NumDealsPurchases','NumStorePurchases','NumWebVisitsMonth']]
 scaler= preprocessing.MinMaxScaler() 
 train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
@@ -2463,14 +2249,6 @@ corr28 = train_corr.corr(method= 'pearson')
 
 corr28[['child']]
 ```
-
-    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_4392/1244991705.py:3: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
-
 
 
 
@@ -2725,12 +2503,6 @@ sql = '''WITH
 df = pd.read_sql(sql, db)
 df
 ```
-
-    /Users/heyvorite/opt/anaconda3/lib/python3.9/site-packages/pandas/io/sql.py:761: UserWarning: pandas only support SQLAlchemy connectable(engine/connection) ordatabase string URI or sqlite3 DBAPI2 connectionother DBAPI2 objects are not tested, please consider using SQLAlchemy
-      warnings.warn(
-
-
-
 
 
 <div>
@@ -3114,15 +2886,6 @@ corr28 = train_corr.corr(method= 'pearson')
 corr28[['NumWebVisitsMonth']]
 ```
 
-    /var/folders/24/90v1mz7x535_f85xz_jjgbnh0000gn/T/ipykernel_4392/829271823.py:3: SettingWithCopyWarning: 
-    A value is trying to be set on a copy of a slice from a DataFrame.
-    Try using .loc[row_indexer,col_indexer] = value instead
-    
-    See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      train_corr[train_corr.columns] = scaler.fit_transform(train_corr[train_corr.columns])
-
-
-
 
 
 <div>
@@ -3188,21 +2951,8 @@ corr28[['NumWebVisitsMonth']]
 
 
 ```python
-import seaborn as sns
-```
-
-
-```python
 sns.scatterplot(data=df, x='NumWebVisitsMonth', y='target')
 ```
-
-
-
-
-    <AxesSubplot:xlabel='NumWebVisitsMonth', ylabel='target'>
-
-
-
 
     
 ![png](/assets/img/post/Cus_Ana/output_106_1.png)
@@ -3214,28 +2964,9 @@ sns.scatterplot(data=df, x='NumWebVisitsMonth', y='target')
 sns.scatterplot(data=df, x='NumWebVisitsMonth', y='NumDealsPurchases')
 ```
 
-
-
-
-    <AxesSubplot:xlabel='NumWebVisitsMonth', ylabel='NumDealsPurchases'>
-
-
-
-
     
 ![png](/assets/img/post/Cus_Ana/output_107_1.png)
     
-
-
-
-```python
-
-```
-
-
-```python
-
-```
 
 
 ```python
