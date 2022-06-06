@@ -73,11 +73,10 @@
   text-decoration-color: rgba(79,177,186,0.5);    // rgba(79,177,186,0.5)
 }
 
-
 .markdown-body {
   kbd {
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
+    font-family: monospace;
+    font-size: 15px;
     color: #555;
     background-color: #fcfcfc;
     border: solid 1px #ccc;
@@ -99,7 +98,7 @@
 under {
     text-decoration: underline;
     text-decoration-color: red !important;
-    text-underline-position: under;
+    text-underline-position:under;
     padding-bottom : 2px;
   }
 }
