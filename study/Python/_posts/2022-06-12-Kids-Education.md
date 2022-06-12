@@ -787,3 +787,19 @@ fig.show()
 
 
 ![png](/assets/img/post/20220612_python_kids/newplot (6).png)
+
+
+
+만든 것들을 모아 대시보드로 만들고  
+streamlit으로 배포하는 것까지 도전해봤다.  
+
+태블로로 간단한 대시보드를 만들 때 웹으로 공유할 수가 없어서 웹으로 배포하고자 하는 니즈가 있었는데  
+잘 연습하면 유용하게 써먹을 수 있지 않을까 싶다.  
+
+Dash 프로그램도 다음엔 한번 도전해보고 싶다.   
+커스터마이징이 더 자유로운 대신, 하나하나 섬세하게 꾸며줘야 예쁘다고 한다.
+
+
+[대시보드 웹으로 확인](https://share.streamlit.io/jhyew0n/heyvorite/main/DataScience/Kids-School/kids_school_analysis.py)
+
+
